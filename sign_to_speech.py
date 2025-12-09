@@ -38,7 +38,7 @@ def classify_by_fingers(open_fingers):
     elif open_fingers == 2:
         return "hello", 0.95  # 2 fingers up = hello
     elif open_fingers == 1:
-        return "hihi", 0.95  # 1 finger up = hihi
+        return "I", 0.95  # 1 finger up = I
     elif open_fingers == 0:
         return "NO", 0.95   # High confidence for closed fist
     else:
