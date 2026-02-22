@@ -1,0 +1,274 @@
+/* =============================================
+   COMMUNICATION PAGE — Sign & Speech Modes
+   ============================================= */
+
+/* --- Mode Toggle --- */
+.mode-toggle {
+  display: flex;
+  gap: var(--space-1);
+  margin-bottom: var(--space-6);
+  justify-content: center;
+  background: var(--bg-glass);
+  padding: var(--space-1);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mode-button {
+  padding: var(--space-3) var(--space-6);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.mode-button:hover {
+  color: var(--text-primary);
+}
+
+.mode-button.active {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  box-shadow: 0 2px 12px rgba(13, 134, 228, 0.3);
+}
+
+/* --- Sign Mode --- */
+.sign-mode {
+  animation: fadeIn 0.4s ease;
+}
+
+.sign-mode .video-container {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto var(--space-6);
+  display: flex;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+}
+
+.video {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  border-radius: var(--radius-lg);
+  background: var(--neutral-900);
+  display: block;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  pointer-events: none;
+}
+
+.webcam-status {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: white;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success-400);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.status-dot.inactive {
+  background: var(--neutral-500);
+  animation: none;
+}
+
+/* --- Prediction Display --- */
+.prediction-display {
+  text-align: center;
+}
+
+.current-word {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: inline-block;
+  color: var(--text-secondary);
+}
+
+.current-word strong {
+  color: var(--accent-400);
+  font-weight: 600;
+}
+
+.sentence-display {
+  margin: var(--space-5) 0;
+  padding: var(--space-6);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  min-height: 100px;
+  position: relative;
+}
+
+.sentence-display h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+  font-weight: 600;
+}
+
+.sentence-text {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  word-wrap: break-word;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.sentence-text.empty {
+  color: var(--text-muted);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.controls {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  margin-top: var(--space-5);
+  flex-wrap: wrap;
+}
+
+/* --- Speech Mode --- */
+.speech-mode {
+  animation: fadeIn 0.4s ease;
+}
+
+.speech-mode .description {
+  margin-bottom: var(--space-5);
+  color: var(--text-secondary);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.transcript-container {
+  min-height: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: var(--space-6);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-5);
+  position: relative;
+}
+
+.transcript-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}
+
+.transcript-text.empty {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding-top: var(--space-10);
+}
+
+/* Recording indicator */
+.recording-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: center;
+  margin-bottom: var(--space-4);
+  font-size: 0.85rem;
+  color: var(--danger-400);
+  font-weight: 500;
+}
+
+.recording-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--danger-400);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+/* Copy notification */
+.copy-toast {
+  position: fixed;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--success-500);
+  color: white;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 500;
+  animation: fadeInUp 0.3s ease forwards;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .video-container {
+    max-width: 100%;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .controls .button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .mode-toggle {
+    width: 100%;
+  }
+
+  .mode-button {
+    flex: 1;
+  }
+
+  .sentence-text {
+    font-size: 1.1rem;
+  }
+}

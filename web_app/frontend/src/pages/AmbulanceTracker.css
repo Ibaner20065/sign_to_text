@@ -1,0 +1,229 @@
+/* =============================================
+   AMBULANCE TRACKER — Emergency SOS
+   ============================================= */
+
+.ambulance-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* --- Map --- */
+.map-wrapper {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+}
+
+/* --- Ambulance Info Cards --- */
+.ambulance-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.ambulance-info-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  transition: all var(--transition-base);
+}
+
+.ambulance-info-card:hover {
+  border-color: var(--border-light);
+  background: var(--bg-glass-hover);
+}
+
+.amb-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.amb-icon-wrap.als {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.amb-icon-wrap.bls {
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.amb-icon-wrap.neonatal {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.amb-details h4 {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.amb-details p {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin: 2px 0;
+}
+
+.amb-eta {
+  color: var(--accent-400) !important;
+  font-weight: 600;
+}
+
+/* --- SOS Section --- */
+.sos-section {
+  text-align: center;
+  padding: var(--space-6) 0;
+}
+
+.sos-button {
+  background: linear-gradient(135deg, var(--danger-500), #b91c1c);
+  color: white;
+  border: none;
+  padding: var(--space-5) var(--space-10);
+  font-family: var(--font-family);
+  font-size: 1.3rem;
+  font-weight: 700;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.02em;
+}
+
+.sos-button::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--danger-400), #991b1b);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  z-index: -1;
+}
+
+.sos-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 30px rgba(239, 68, 68, 0.5);
+}
+
+.sos-button:hover::before {
+  opacity: 1;
+}
+
+.sos-button:active {
+  transform: scale(0.98);
+}
+
+/* Pulsating ring around SOS */
+.sos-button-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.sos-button-wrapper::before,
+.sos-button-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--danger-400);
+  opacity: 0;
+  animation: ripple 2s ease-out infinite;
+}
+
+.sos-button-wrapper::after {
+  animation-delay: 1s;
+}
+
+.sos-message {
+  margin-top: var(--space-5);
+  padding: var(--space-4) var(--space-6);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-400);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 500;
+  animation: fadeInUp 0.4s ease;
+  display: inline-block;
+}
+
+/* --- Popup Styles --- */
+.ambulance-popup h3 {
+  margin: 0 0 8px 0;
+  color: var(--danger-500);
+  font-size: 1rem;
+}
+
+.ambulance-popup p {
+  margin: 4px 0;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+/* --- Modal --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  max-width: 420px;
+  width: 90%;
+  box-shadow: var(--shadow-xl);
+  animation: scaleIn 0.3s ease;
+}
+
+.modal-content h2 {
+  margin-bottom: var(--space-3);
+  color: var(--danger-400);
+  font-size: 1.3rem;
+}
+
+.modal-content p {
+  margin-bottom: var(--space-6);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .ambulance-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sos-button {
+    width: 100%;
+    max-width: 320px;
+  }
+}

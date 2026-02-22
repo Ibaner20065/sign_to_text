@@ -1,0 +1,204 @@
+/* =============================================
+   HOSPITAL FINDER — Map & List
+   ============================================= */
+
+.hospital-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* --- Filter Bar --- */
+.filter-section {
+  margin-bottom: var(--space-2);
+}
+
+.specialty-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.specialty-button {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--border-light);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all var(--transition-base);
+}
+
+.specialty-button:hover {
+  border-color: var(--primary-400);
+  color: var(--primary-300);
+  background: rgba(13, 134, 228, 0.05);
+}
+
+.specialty-button.active {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(13, 134, 228, 0.3);
+}
+
+/* --- Map --- */
+.map-wrapper {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+}
+
+/* --- Hospital List --- */
+.hospital-list {
+  margin-top: var(--space-2);
+}
+
+.hospital-list h3 {
+  margin-bottom: var(--space-4);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hospital-count {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.list-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.hospital-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--primary-400);
+  transition: all var(--transition-base);
+  animation: fadeInUp 0.4s ease both;
+}
+
+.hospital-card:nth-child(2) {
+  animation-delay: 0.05s;
+}
+
+.hospital-card:nth-child(3) {
+  animation-delay: 0.1s;
+}
+
+.hospital-card:nth-child(4) {
+  animation-delay: 0.15s;
+}
+
+.hospital-card:nth-child(5) {
+  animation-delay: 0.2s;
+}
+
+.hospital-card:hover {
+  border-color: var(--primary-400);
+  background: var(--bg-glass-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.hospital-card h4 {
+  margin: 0 0 var(--space-3) 0;
+  color: var(--primary-300);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.hospital-card p {
+  margin: var(--space-1) 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.hospital-card p strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.hospital-card .distance-value {
+  color: var(--accent-400);
+  font-weight: 600;
+}
+
+.hospital-card .phone-value {
+  color: var(--primary-400);
+}
+
+/* --- Specialty Tags --- */
+.specialty-tag {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}
+
+.specialty-tag.general {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+.specialty-tag.cardiology {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger-400);
+}
+
+.specialty-tag.neurology {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.specialty-tag.pediatrics {
+  background: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+}
+
+.specialty-tag.emergency {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning-400);
+}
+
+/* --- Popup Styles --- */
+.hospital-popup h3 {
+  margin: 0 0 8px 0;
+  color: #2563eb;
+  font-size: 1rem;
+}
+
+.hospital-popup p {
+  margin: 4px 0;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .list-container {
+    grid-template-columns: 1fr;
+  }
+
+  .specialty-buttons {
+    justify-content: flex-start;
+  }
+}

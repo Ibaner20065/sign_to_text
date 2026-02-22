@@ -1,0 +1,241 @@
+/* =============================================
+   DOCUMENT SCANNER — Scam Detection
+   ============================================= */
+
+.scanner-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* --- Upload Area --- */
+.upload-section {
+  margin-bottom: var(--space-5);
+}
+
+.upload-dropzone {
+  border: 2px dashed var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-10) var(--space-6);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  background: var(--bg-glass);
+}
+
+.upload-dropzone:hover {
+  border-color: var(--primary-400);
+  background: rgba(13, 134, 228, 0.05);
+}
+
+.upload-dropzone.has-file {
+  border-color: var(--success-400);
+  border-style: solid;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-3);
+  display: block;
+}
+
+.upload-text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-2);
+}
+
+.upload-hint {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all var(--transition-base);
+  box-shadow: 0 2px 8px rgba(13, 134, 228, 0.3);
+}
+
+.file-label:hover {
+  background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
+  transform: translateY(-1px);
+}
+
+.file-name {
+  margin-left: var(--space-3);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* --- Preview --- */
+.preview-section {
+  margin: var(--space-5) 0;
+  text-align: center;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 350px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+}
+
+/* --- Results --- */
+.results-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  animation: fadeInUp 0.5s ease both;
+}
+
+.results-container .card {
+  animation: fadeInUp 0.5s ease both;
+}
+
+.results-container .card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.ocr-text {
+  background: var(--bg-glass);
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+/* --- Flagged & Clean Badges --- */
+.flagged-badge {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning-400);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.clean-badge {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-400);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* --- Flagged Items List --- */
+.flagged-items {
+  margin: var(--space-4) 0;
+}
+
+.flagged-items h4 {
+  margin-bottom: var(--space-3);
+  color: var(--danger-400);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.flagged-items ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.flagged-items li {
+  padding: var(--space-3) var(--space-4);
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--danger-400);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.flagged-items li::before {
+  content: '⚠️';
+  flex-shrink: 0;
+}
+
+/* --- Highlighted Text --- */
+.highlighted-text {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.highlighted-text h4 {
+  margin-bottom: var(--space-3);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.flagged-text {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning-400);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+/* --- Scan Button --- */
+.scan-actions {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .results-container {
+    grid-template-columns: 1fr;
+  }
+}
