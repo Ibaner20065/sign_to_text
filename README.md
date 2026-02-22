@@ -1,176 +1,237 @@
+# Inclusive Healthcare Platform (MVP)
 
-📘 Sign to Text — Real-Time Sign Language Recognition (ML + MediaPipe)
-Welcome to Sign to Text, a real-time hand-sign recognition system that uses MediaPipe, Machine Learning, and Text-to-Speech to convert gestures into spoken words or full sentences.
-This project is ideal for beginners and advanced learners exploring computer vision, gesture recognition, and AI-driven communication tools.
+An accessibility-first healthcare web platform designed for both the general public and differently-abled users. This MVP builds on an existing FastAPI backend and sign-language ML pipeline to deliver real-time communication tools, emergency awareness, document safety checks, and accessible healthcare discovery -- all behind secure authentication.
 
-✨ Features
-✔ Real-time hand detection
-Uses MediaPipe Hands to track 21 3D landmarks at high FPS.
-✔ Custom ML sign classification
-Train a RandomForestClassifier on your own hand gestures (YES / NO / HELLO / etc.)
-✔ Live gesture → spoken word conversion
-Predicted signs are converted to speech using pyttsx3.
-✔ Sentence generation
-The system can build and speak multi-word sentences based on your gestures.
-✔ Easy to extend
-Add new gestures simply by collecting more data and retraining.
+---
 
-🗂 Project Structure
-sign_to_speech/
-│── collect_data.py           # Collect YES/NO gesture data (press Y/N)
-│── train_model.py            # Train RandomForest on collected data
-│── sign_to_speech_ml.py      # Real-time recognition & speech
-│── sign_data.csv             # Auto-generated dataset
-│── model.joblib              # Trained ML model
-│── README.md                 # Project documentation
-│── requirements.txt          # Dependencies
-│── assets/
-│     └── hello_cat.gif       # GIF used in README
+## 🌍 Platform Vision
 
-📦 Installation
+Break down communication barriers in healthcare by providing inclusive, assistive interactions through browser-native capabilities and lightweight ML -- no specialized hardware or paid APIs required.
 
-Install all required packages:
+**Primary users:**
 
-python -m pip install opencv-python mediapipe pyttsx3 scikit-learn pandas numpy joblib
+- Deaf / hard-of-hearing users
+- Speech-impaired users
+- General patients needing accessible tools
+- Caregivers and healthcare staff
 
-Works with Python 3.9–3.12.
+---
 
-🎥 Step 1 — Collect Training Data
+## 🧱 Tech Stack
 
-Run:
+| Layer | Technology |
+|---|---|
+| Frontend | React + Vite |
+| Backend | FastAPI (extended existing backend) |
+| ML Model | RandomForest (`sign_model.pkl`) + MediaPipe Hands (browser) |
+| Maps | Leaflet.js |
+| Speech-to-Text | Browser Web Speech API |
+| Text-to-Speech | Browser Web Speech API |
+| OCR | pytesseract (existing backend) |
+| Auth | JWT via FastAPI |
 
-python collect_data.py
+> No paid external APIs required.
 
+---
 
-Controls:
+## 🔐 Authentication
 
-Key	Action
-Y	Save current frame as label yes
-N	Save current frame as label no
-Q	Quit
+All application pages require login.
 
-Important:
+**Features:**
+- Register (name, email, password)
+- Login
+- JWT stored in browser
+- JWT sent as `Authorization: Bearer <token>` to FastAPI
 
-Record 50–100 samples per sign (YES & NO minimum)
+**Backend endpoints:**
+- `POST /auth/register`
+- `POST /auth/login`
 
-Samples are appended to sign_data.csv
+---
 
-Ensure your hand is visible before pressing keys
+## 🧭 Navigation
 
-🧠 Step 2 — Train the ML Model
+The platform contains 5 authenticated pages:
 
-Train a classifier on the collected dataset:
+1. Communication
+2. Ambulance / SOS
+3. Document Scanner
+4. Hospital Finder
+5. Profile / Settings
 
-python train_model.py
+---
 
+## 🤟 1. Communication -- Sign Language + Speech
 
-This will:
+A single screen with two user-toggle modes.
 
-Load sign_data.csv
+### Mode A -- Sign to Speech
 
-Normalize data using StandardScaler
+Enable speech-impaired users to communicate verbally via sign language.
 
-Train a RandomForestClassifier
+**Flow:**
+1. Webcam feed captured in browser
+2. MediaPipe Hands extracts landmarks
+3. Landmarks sent to `POST /predict`
+4. Backend returns recognized word
+5. Words buffered with majority-vote smoothing
+6. Sentence displayed on screen
+7. Browser Text-to-Speech speaks sentence
 
-Show accuracy + classification report
+**Controls:** Speak / Clear / Copy sentence
 
-Save the model bundle (model.joblib)
+---
 
-Example output:
+### Mode B -- Speech to Text (Live Captioning)
 
-Loaded 200 samples
-Label distribution:
-yes    100
-no     100
-Training model...
-Accuracy: 95%
-Saved trained model to model.joblib
+Allow hearing individuals to speak so that deaf users can read along in real time.
 
-🗣 Step 3 — Real-Time Sign → Speech
+**Flow:**
+1. Microphone activated via Web Speech API
+2. Speech transcribed in real time
+3. Text displayed as scrolling captions
 
-Run:
+---
 
-python sign_to_speech_ml.py
+## 🚑 2. Ambulance Tracker / Emergency SOS
 
+An interactive emergency awareness map built with Leaflet.
 
-This will:
+**Map features:**
+- Centered on browser geolocation
+- 3 mock ambulance units sourced from `/ambulance-status`
+- Status indicators: Moving / Stationary
+- ETA and ambulance type per unit
+- Animated markers simulating vehicle motion
 
-Open your webcam
+**SOS Button:**
+- Large, prominent red emergency button
+- Confirmation modal before triggering
+- Displays "Emergency alert sent" on confirm
+- Mock response only -- no live dispatch integration
 
-Detect your hand
+---
 
-Predict YES/NO
+## 📄 3. Document Scanner -- Medical Scam Detection
 
-Speak the result aloud
+Upload a medical bill or report (image or PDF) to check for suspicious content.
 
-Controls
-Key	Action
-Q	Quit
-🖼 How It Works
-1. MediaPipe Landmark Extraction
+**Flow:**
+1. File uploaded via browser
+2. Sent to `POST /scan-document`
+3. pytesseract extracts text from the file
+4. Text scanned for suspicious patterns:
+   - Inflated pricing indicators
+   - Unrecognized drug names
+   - Duplicate line items
+5. Results displayed in two panels:
+   - Raw OCR text
+   - Flagged items with warning highlights
 
-MediaPipe gives 21 hand points → each with (x, y, z).
+If no issues are found, the result displays: `✅ No suspicious content detected`
 
-Total features = 63 per frame.
+---
 
-2. Machine Learning Classification
+## 🏥 4. Hospital / Doctor Finder
 
-A RandomForestClassifier learns patterns in these 63 features.
+Discover nearby healthcare providers using an accessible, map-based UI and mock spatial data.
 
-3. Prediction Stabilization
+**Features:**
+- Leaflet map centered on user location
+- 10-15 mock hospitals generated around user coordinates
+- Pin popups display: hospital name, specialty, distance, and phone number
 
-A short rolling window makes predictions stable (no flickering).
+**Filter bar options:**
+- General
+- Cardiology
+- Neurology
+- Pediatrics
+- Emergency
 
-4. Text-to-Speech Output
+> No external hospital API required.
 
-Predicted word is spoken using pyttsx3.
+---
 
-📈 Adding More Signs
+## 👤 5. User Profile / Accessibility Settings
 
-You can expand the vocabulary easily:
+Manage your account and personalize your accessibility experience.
 
-Modify collect_data.py
+**Profile:**
+- Name and email
+- Profile picture upload
 
-Add more keys like H → “hello”, T → “thankyou”
+**Accessibility settings:**
+- Font size: Normal / Large / Extra Large
+- High-contrast mode toggle
+- TTS speed slider
 
-Collect new samples
+**Account actions:**
+- Change password
+- Logout
 
-Retrain:
+---
 
-python train_model.py
+## 🗂️ Project Structure
 
+```
+web_app/
+  frontend/            # React + Vite app
+    src/
+      pages/           # Communication, Ambulance, Scanner, Hospitals, Profile
+      components/      # Navbar, Map, WebcamFeed, SpeechPanel, etc.
+      context/         # AuthContext (JWT handling)
+  backend/
+    main.py            # Existing FastAPI app (extended with auth + hospitals)
+```
 
-Run inference again
+---
 
-You can add:
+## 🔌 Backend Endpoints
 
-HELLO
+| Category | Method | Endpoint |
+|---|---|---|
+| Auth | POST | `/auth/register` |
+| Auth | POST | `/auth/login` |
+| ML | POST | `/predict` |
+| Emergency | GET | `/ambulance-status` |
+| OCR | POST | `/scan-document` |
+| Hospitals | GET | `/hospitals` |
 
-PLEASE
+---
 
-STOP
+## ♿ Accessibility Principles
 
-OK
+This platform is built accessibility-first. Core principles:
 
-I LOVE YOU
+- Large touch targets throughout
+- High-contrast mode available
+- Text alternatives for all audio content
+- Audio alternatives for all text content
+- Adjustable font sizes
+- Caption-first communication design
 
-Custom commands (e.g., “Open Browser”)
+---
 
-🧩 Requirements (Python)
+## 🚀 MVP Scope
 
-requirements.txt:
+This MVP is intentionally scoped to be fully buildable using only:
 
-opencv-python
-mediapipe
-pyttsx3
-numpy
-pandas
-scikit-learn
-joblib
+- Existing FastAPI backend
+- Existing sign language model (`sign_model.pkl`)
+- Browser-native APIs (Web Speech, MediaPipe, Geolocation)
+- Mock spatial data for hospitals and ambulances
 
+No real-time GPS dispatch, live hospital APIs, or paid third-party services are required.
 
-👤 Author
+---
 
-Indrayudh Bandyopadhyay
-ECE Undergrad • AI/ML Enthusiast
-GitHub: @Ibaner20065
+## 📌 Status
+
+Architecture defined and build-ready. Frontend and backend integration in progress.
+
+---
+
+## 🧑‍⚕️ Goal
+
+Build a practical, inclusive healthcare interface where communication barriers are reduced and essential healthcare interactions become accessible to every user -- regardless of ability.
