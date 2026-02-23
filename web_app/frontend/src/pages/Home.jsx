@@ -306,6 +306,54 @@ const Home = () => {
                 </div>
             </section>
 
+            {/* ═══ MISSION SECTION ═══ */}
+            <section className="mission-section" id="mission">
+                <div className="mission-container">
+                    <div className="mission-image">
+                        <div className="mission-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=1000&q=80" alt="Sign Language Computer Interface" />
+                            <div className="mission-image-scanline"></div>
+                            <div className="interface-overlay">
+                                <div className="overlay-node node-1"></div>
+                                <div className="overlay-node node-2"></div>
+                                <div className="overlay-node node-3"></div>
+                            </div>
+                        </div>
+                        <div className="mission-stats-float">
+                            <div className="float-stat">
+                                <span className="stat-num">98%</span>
+                                <span className="stat-txt">Visual Accuracy</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mission-text">
+                        <span className="section-label section-label-purple">The Vision</span>
+                        <h2 className="mission-title">Proprietary Neuro-Sign Recognition</h2>
+                        <p className="mission-desc">
+                            Our platform is built around the fundamental need for seamless, two-way medical communication.
+                            Using advanced computer vision, we capture sign language through any standard webcam and
+                            convert it into clinical-grade speech and text instantly.
+                        </p>
+                        <div className="mission-feature-list">
+                            <div className="mission-feature-item">
+                                <span className="feature-marker">⚡</span>
+                                <div>
+                                    <h4>Real-Time Transcription</h4>
+                                    <p>Zero-lag conversion from ASL/ISL to text for immediate physician review.</p>
+                                </div>
+                            </div>
+                            <div className="mission-feature-item">
+                                <span className="feature-marker">👁️</span>
+                                <div>
+                                    <h4>Skeletal Hand Tracking</h4>
+                                    <p>High-precision tracking of 21 finger joints for perfect gesture capture.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* ═══ CAPABILITIES ═══ */}
             <section className="capabilities-section" id="accessibility">
                 <div className="capabilities-container">
