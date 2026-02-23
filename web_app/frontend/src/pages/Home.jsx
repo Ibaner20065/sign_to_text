@@ -13,16 +13,16 @@ const Home = () => {
 
     const heroSlides = [
         {
-            image: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&q=80',
-            alt: 'Medical professional consulting with patient using sign language interpretation technology',
+            image: 'https://images.unsplash.com/photo-1573497019707-1c0453306e12?w=1200&q=80',
+            alt: 'Deaf individual using sign language to communicate via high-tech computer interface with real-time translation',
         },
         {
-            image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80',
-            alt: 'Advanced medical diagnostic equipment in a modern hospital facility',
+            image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80',
+            alt: 'Futuristic hospital facility with real-time accessibility integration',
         },
         {
-            image: 'https://images.unsplash.com/photo-1551190822-a9ce113ac100?w=800&q=80',
-            alt: 'Healthcare technology interface displaying patient accessibility data',
+            image: 'https://images.unsplash.com/photo-1551190822-a9ce113ac100?w=1200&q=80',
+            alt: 'Healthcare technology interface displaying neural sign recognition metrics',
         },
     ]
 

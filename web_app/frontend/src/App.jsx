@@ -12,7 +12,7 @@ import DocumentScanner from './pages/DocumentScanner'
 import HospitalFinder from './pages/HospitalFinder'
 import Profile from './pages/Profile'
 import Emergency from './pages/Emergency'
-import Health from './pages/Health'
+import AIChatbot from './components/AIChatbot'
 import './App.css'
 
 function App() {
@@ -57,6 +57,7 @@ function App() {
               }
             />
           </Routes>
+          <AIChatbot />
         </div>
       </Router>
     </AuthProvider>
