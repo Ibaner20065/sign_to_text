@@ -195,6 +195,8 @@ const Communication = () => {
     setTimeout(() => setShowCopyToast(false), 2000)
   }
 
+  const finalTranscriptRef = useRef('')
+
   const startSpeechRecognition = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       alert('Speech recognition not supported in this browser')
@@ -207,20 +209,21 @@ const Communication = () => {
     recognition.interimResults = true
     recognition.lang = 'en-US'
 
+    finalTranscriptRef.current = transcript
+
     recognition.onresult = (event) => {
       let interimTranscript = ''
-      let finalTranscript = ''
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const t = event.results[i][0].transcript
         if (event.results[i].isFinal) {
-          finalTranscript += t + ' '
+          finalTranscriptRef.current += t + ' '
         } else {
           interimTranscript += t
         }
       }
 
-      setTranscript((prev) => prev + finalTranscript + interimTranscript)
+      setTranscript(finalTranscriptRef.current + interimTranscript)
     }
 
     recognition.onerror = (event) => {

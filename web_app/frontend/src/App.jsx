@@ -11,6 +11,7 @@ import DocumentScanner from './pages/DocumentScanner'
 import HospitalFinder from './pages/HospitalFinder'
 import Profile from './pages/Profile'
 import Emergency from './pages/Emergency'
+import Health from './pages/Health'
 import './App.css'
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
                         <Route path="/ambulance" element={<AmbulanceTracker />} />
                         <Route path="/scanner" element={<DocumentScanner />} />
                         <Route path="/hospitals" element={<HospitalFinder />} />
+                        <Route path="/health" element={<Health />} />
                         <Route path="/profile" element={<Profile />} />
                       </Routes>
                     </div>

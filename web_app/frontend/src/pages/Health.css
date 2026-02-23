@@ -1,0 +1,682 @@
+/* =============================================
+   HEALTH MONITOR — Pinterest Wellness Dashboard
+   Pastel · Rounded · Calm · Apple Fitness Vibe
+   ============================================= */
+
+/* --- Header --- */
+.health-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.health-header .page-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #2a2a2a;
+}
+
+.streak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #fff7ed, #ffecd2);
+    color: #d97706;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 12px rgba(217, 119, 6, 0.12);
+    animation: fadeIn 0.5s ease;
+}
+
+/* ═══════════════════════════════════════════════
+   STATS GRID — 4 pastel cards
+   ═══════════════════════════════════════════════ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: var(--space-6);
+}
+
+.stat-card {
+    border-radius: 20px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Individual card pastel backgrounds */
+.steps-card {
+    background: linear-gradient(145deg, #e8faf0, #d1f5e0);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+}
+
+.calories-card {
+    background: linear-gradient(145deg, #fff4e6, #ffecd2);
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.1);
+}
+
+.heart-card {
+    background: linear-gradient(145deg, #ffe8ec, #ffd6dd);
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.1);
+}
+
+.water-card {
+    background: linear-gradient(145deg, #e6f2ff, #cfe8ff);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+}
+
+.stat-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.heart-pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.stat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7a7a8e;
+    font-weight: 700;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #2a2a2a;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.stat-value small {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #8e8ea0;
+}
+
+.stat-goal {
+    font-size: 0.78rem;
+    color: #a0a0b0;
+    font-weight: 500;
+}
+
+/* ─── Progress Ring ─── */
+.stat-progress {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0;
+}
+
+.progress-ring {
+    --size: 60px;
+    --stroke: 6px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.78rem;
+    color: #2a2a2a;
+    background: conic-gradient(var(--ring-color, #10b981) calc(var(--progress, 0) * 1%),
+            rgba(0, 0, 0, 0.06) calc(var(--progress, 0) * 1%));
+    position: relative;
+}
+
+.progress-ring::before {
+    content: '';
+    position: absolute;
+    inset: var(--stroke);
+    border-radius: 50%;
+    background: white;
+}
+
+.progress-ring span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Goal badges */
+.goal-complete,
+.goal-low {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+}
+
+.goal-complete {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+}
+
+.goal-low {
+    background: rgba(239, 68, 68, 0.08);
+    color: #dc2626;
+}
+
+.hr-status {
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.hr-status.normal {
+    color: #059669;
+}
+
+.hr-status.low {
+    color: #3b82f6;
+}
+
+.hr-status.high {
+    color: #dc2626;
+}
+
+/* ─── Mini action inputs ─── */
+.stat-action {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+
+.mini-input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 2px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    font-family: var(--font-family);
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.7);
+    color: #2a2a2a;
+    outline: none;
+    min-width: 0;
+    transition: all 0.2s ease;
+}
+
+.mini-input:focus {
+    border-color: var(--primary-400);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+}
+
+.mini-btn {
+    padding: 8px 14px;
+    background: #2a2a2a;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.mini-btn:hover {
+    background: #1a1a2a;
+    transform: scale(1.05);
+}
+
+/* Water buttons */
+.water-buttons {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.water-btn {
+    flex: 1;
+    padding: 8px 4px;
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+    border: 2px solid rgba(59, 130, 246, 0.15);
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 0.78rem;
+    transition: all 0.2s ease;
+}
+
+.water-btn:hover {
+    background: rgba(59, 130, 246, 0.18);
+    transform: scale(1.03);
+}
+
+/* ═══════════════════════════════════════════════
+   DAILY PROGRESS — Soft rounded bars
+   ═══════════════════════════════════════════════ */
+#activity-progress {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2a2a2a;
+    margin-bottom: var(--space-5);
+    letter-spacing: -0.01em;
+}
+
+.progress-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.progress-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5a5a6e;
+}
+
+.progress-bar {
+    height: 12px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.steps-fill {
+    background: linear-gradient(90deg, #a7f3d0, #34d399, #10b981);
+}
+
+.calories-fill {
+    background: linear-gradient(90deg, #fde68a, #fbbf24, #f59e0b);
+}
+
+.water-fill {
+    background: linear-gradient(90deg, #bfdbfe, #60a5fa, #3b82f6);
+}
+
+.exercise-fill {
+    background: linear-gradient(90deg, #fecaca, #f87171, #ef4444);
+}
+
+/* ═══════════════════════════════════════════════
+   BOTTOM GRID — Exercise Log + Weekly Chart
+   ═══════════════════════════════════════════════ */
+.health-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: var(--space-6);
+}
+
+.health-bottom-grid .card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.section-header .section-title {
+    margin-bottom: 0;
+}
+
+.section-header .button-primary {
+    border-radius: 12px;
+    font-size: 0.85rem;
+    padding: 10px 18px;
+}
+
+.empty-state {
+    text-align: center;
+    color: #b0b0c0;
+    padding: var(--space-8) 0;
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+/* ─── Exercise List ─── */
+.exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.exercise-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #f7f8fa;
+    border: none;
+    border-radius: 14px;
+    animation: fadeInUp 0.3s ease both;
+    transition: all 0.2s ease;
+}
+
+.exercise-item:hover {
+    background: #f0f1f5;
+}
+
+.exercise-icon {
+    font-size: 1.6rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.exercise-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.exercise-details strong {
+    color: #2a2a2a;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.exercise-details span {
+    font-size: 0.78rem;
+    color: #8e8ea0;
+    font-weight: 500;
+}
+
+.remove-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(239, 68, 68, 0.08);
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    opacity: 0.5;
+}
+
+.exercise-item:hover .remove-btn {
+    opacity: 1;
+}
+
+.remove-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    transform: scale(1.1);
+}
+
+.exercise-summary {
+    padding-top: 14px;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    font-size: 0.85rem;
+    color: #7a7a8e;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* ─── Weekly Chart ─── */
+.chart-toggle {
+    display: flex;
+    gap: 4px;
+    background: #f7f8fa;
+    padding: 4px;
+    border-radius: 12px;
+    border: none;
+}
+
+.toggle-btn {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    color: #8e8ea0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+    color: #5a5a6e;
+}
+
+.toggle-btn.active {
+    background: white;
+    color: #2a2a2a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    font-weight: 700;
+}
+
+.chart-container {
+    margin-top: var(--space-4);
+}
+
+/* ═══════════════════════════════════════════════
+   ADD EXERCISE MODAL
+   ═══════════════════════════════════════════════ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(42, 42, 42, 0.4);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+    background: white;
+    padding: 32px;
+    border-radius: 24px;
+    max-width: 440px;
+    width: 92%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    animation: scaleIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.modal-content h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #2a2a2a;
+    margin-bottom: var(--space-5);
+}
+
+.exercise-type-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: var(--space-5);
+}
+
+.exercise-type-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 8px;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    background: #f7f8fa;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.exercise-type-btn:hover {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: #f0f1f5;
+    transform: scale(1.03);
+}
+
+.exercise-type-btn.selected {
+    border-color: var(--sel-color, #2a2a2a);
+    background: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: scale(1.03);
+}
+
+.et-icon {
+    font-size: 1.6rem;
+}
+
+.et-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #5a5a6e;
+}
+
+.calorie-preview {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #7a7a8e;
+    margin-bottom: var(--space-5);
+    padding: 12px 16px;
+    background: #f7f8fa;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.calorie-preview strong {
+    color: #f59e0b;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.modal-buttons .button {
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 18px 14px;
+        border-radius: 16px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .health-bottom-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .health-bottom-grid .card {
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    #activity-progress {
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .exercise-type-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .chart-toggle {
+        align-self: flex-start;
+    }
+
+    .modal-content {
+        padding: 24px;
+        border-radius: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .health-header .page-title {
+        font-size: 1.5rem;
+    }
+}

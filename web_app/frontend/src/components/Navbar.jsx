@@ -13,6 +13,7 @@ const Navbar = () => {
     { path: '/ambulance', label: 'Ambulance', icon: '🚑' },
     { path: '/scanner', label: 'Scanner', icon: '📄' },
     { path: '/hospitals', label: 'Hospitals', icon: '🏥' },
+    { path: '/health', label: 'Health', icon: '💪' },
     { path: '/profile', label: 'Profile', icon: '👤' },
   ]
 
