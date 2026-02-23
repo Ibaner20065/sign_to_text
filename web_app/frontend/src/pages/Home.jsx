@@ -224,6 +224,84 @@ const Home = () => {
                 </div>
             </section>
 
+            {/* ═══ BOOK SERVICES ═══ */}
+            <section className="booking-section" id="book">
+                <div className="booking-container">
+                    <div className="booking-header">
+                        <span className="section-label section-label-yellow">Quick Actions</span>
+                        <h2 className="booking-title">Book Healthcare Services</h2>
+                        <p className="booking-subtitle">
+                            Instant reservation and dispatch for critical and routine medical services
+                        </p>
+                    </div>
+                    <div className="booking-grid">
+                        {/* Book Ambulance */}
+                        <div className="booking-card booking-card-emergency" onClick={() => isAuthenticated ? navigate('/ambulance') : openAuth('login')}>
+                            <div className="booking-card-glow booking-glow-yellow"></div>
+                            <div className="booking-card-icon-wrap booking-icon-yellow">
+                                <span>🚑</span>
+                            </div>
+                            <h3>Book Ambulance</h3>
+                            <p>Request emergency medical transport with real-time GPS tracking and ETA monitoring. Priority dispatch for critical cases.</p>
+                            <div className="booking-card-meta">
+                                <span className="booking-meta-tag booking-tag-yellow">⚡ Avg. Response: 8 min</span>
+                            </div>
+                            <button className="booking-card-btn booking-btn-yellow">
+                                {isAuthenticated ? 'Dispatch Now' : 'Sign In to Book'} →
+                            </button>
+                        </div>
+
+                        {/* Book Hospital */}
+                        <div className="booking-card" onClick={() => isAuthenticated ? navigate('/hospitals') : openAuth('login')}>
+                            <div className="booking-card-glow booking-glow-cyan"></div>
+                            <div className="booking-card-icon-wrap booking-icon-cyan">
+                                <span>🏥</span>
+                            </div>
+                            <h3>Reserve Hospital Bed</h3>
+                            <p>Check real-time bed availability across partner facilities. Reserve ICU, general ward, or specialized accessible rooms.</p>
+                            <div className="booking-card-meta">
+                                <span className="booking-meta-tag booking-tag-cyan">♿ Accessible Rooms Available</span>
+                            </div>
+                            <button className="booking-card-btn booking-btn-cyan">
+                                {isAuthenticated ? 'Check Availability' : 'Sign In to Book'} →
+                            </button>
+                        </div>
+
+                        {/* Schedule Appointment */}
+                        <div className="booking-card" onClick={() => isAuthenticated ? navigate('/hospitals') : openAuth('login')}>
+                            <div className="booking-card-glow booking-glow-purple"></div>
+                            <div className="booking-card-icon-wrap booking-icon-purple">
+                                <span>📅</span>
+                            </div>
+                            <h3>Schedule Appointment</h3>
+                            <p>Book consultations with sign-language certified physicians. Video, in-person, or hybrid appointments available.</p>
+                            <div className="booking-card-meta">
+                                <span className="booking-meta-tag booking-tag-purple">🤟 ASL-Certified Doctors</span>
+                            </div>
+                            <button className="booking-card-btn booking-btn-purple">
+                                {isAuthenticated ? 'Schedule Now' : 'Sign In to Book'} →
+                            </button>
+                        </div>
+
+                        {/* Request Interpreter */}
+                        <div className="booking-card" onClick={() => isAuthenticated ? navigate('/communication') : openAuth('login')}>
+                            <div className="booking-card-glow booking-glow-gradient"></div>
+                            <div className="booking-card-icon-wrap booking-icon-gradient">
+                                <span>🧑‍⚕️</span>
+                            </div>
+                            <h3>Request Interpreter</h3>
+                            <p>Connect with certified medical sign language interpreters for your upcoming appointment or ongoing consultation.</p>
+                            <div className="booking-card-meta">
+                                <span className="booking-meta-tag booking-tag-gradient">📡 Available 24/7</span>
+                            </div>
+                            <button className="booking-card-btn booking-btn-gradient">
+                                {isAuthenticated ? 'Request Now' : 'Sign In to Book'} →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* ═══ CAPABILITIES ═══ */}
             <section className="capabilities-section" id="accessibility">
                 <div className="capabilities-container">

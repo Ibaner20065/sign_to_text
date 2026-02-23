@@ -41,6 +41,7 @@ const Navbar = ({ variant = 'auto' }) => {
   // Public nav items
   const publicItems = [
     { href: '#services', label: 'Services' },
+    { href: '#book', label: 'Book Services' },
     { href: '#accessibility', label: 'Accessibility' },
     { path: '/emergency', label: 'Emergency' },
   ]
