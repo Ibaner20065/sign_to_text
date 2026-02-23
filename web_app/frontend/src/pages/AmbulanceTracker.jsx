@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
+import { Truck, Siren, CheckCircle, AlertTriangle } from 'lucide-react'
 
 import './AmbulanceTracker.css'
 
@@ -147,7 +148,7 @@ const AmbulanceTracker = () => {
 
   return (
     <div id="ambulance-page">
-      <h1 className="page-title">🚑 Ambulance Tracker</h1>
+      <h1 className="page-title"><Truck size={36} style={{ verticalAlign: 'middle', marginRight: '12px' }} /> Ambulance Tracker</h1>
 
       <div className="ambulance-container">
         {/* Ambulance Info Cards */}
@@ -155,7 +156,7 @@ const AmbulanceTracker = () => {
           {ambulances.map((amb) => (
             <div key={amb.id} className="ambulance-info-card">
               <div className={`amb-icon-wrap ${getAmbTypeClass(amb.type)}`}>
-                🚑
+                <Truck size={24} />
               </div>
               <div className="amb-details">
                 <h4>Ambulance #{amb.id} — {amb.type}</h4>
@@ -186,7 +187,7 @@ const AmbulanceTracker = () => {
               <Marker key={amb.id} position={[amb.lat, amb.lng]} icon={ambulanceIcon}>
                 <Popup>
                   <div className="ambulance-popup">
-                    <h3>🚑 Ambulance #{amb.id}</h3>
+                    <h3><Truck size={20} style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Ambulance #{amb.id}</h3>
                     <p><strong>Status:</strong> {amb.status}</p>
                     <p><strong>Type:</strong> {amb.type}</p>
                     <p><strong>ETA:</strong> {amb.eta}</p>
@@ -203,13 +204,13 @@ const AmbulanceTracker = () => {
         {/* SOS Section */}
         <div className="sos-section" id="sos-section">
           <div className="sos-button-wrapper">
-            <button className="sos-button" onClick={handleSOS} id="sos-button">
-              🚨 EMERGENCY SOS
+            <button className="sos-button" onClick={handleSOS} id="sos-button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+              <Siren size={32} /> EMERGENCY SOS
             </button>
           </div>
           {sosSent && (
-            <div className="sos-message" id="sos-confirmation">
-              ✅ Emergency alert sent! Help is on the way. Nearest ambulance arriving in ~5 minutes.
+            <div className="sos-message" id="sos-confirmation" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <CheckCircle size={20} /> Emergency alert sent! Help is on the way. Nearest ambulance arriving in ~5 minutes.
             </div>
           )}
         </div>
@@ -219,11 +220,11 @@ const AmbulanceTracker = () => {
       {showSOSModal && (
         <div className="modal-overlay" onClick={() => setShowSOSModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()} id="sos-modal">
-            <h2>⚠️ Confirm Emergency SOS</h2>
+            <h2 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}><AlertTriangle size={32} color="#f59e0b" /> Confirm Emergency SOS</h2>
             <p>This will send an emergency alert to all nearby ambulance services. Are you sure you want to proceed?</p>
             <div className="modal-buttons">
-              <button className="button button-danger" onClick={confirmSOS} id="sos-confirm">
-                🚨 Yes, Send SOS
+              <button className="button button-danger" onClick={confirmSOS} id="sos-confirm" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Siren size={18} /> Yes, Send SOS
               </button>
               <button className="button button-secondary" onClick={() => setShowSOSModal(false)} id="sos-cancel">
                 Cancel

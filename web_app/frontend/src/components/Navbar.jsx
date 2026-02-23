@@ -1,5 +1,17 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import {
+  Hand,
+  Truck,
+  FileText,
+  Hospital as HospitalIcon,
+  HeartPulse,
+  User as UserIcon,
+  LogOut,
+  Menu,
+  X,
+  Activity
+} from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import AuthModal from './AuthModal'
 import ColorBlindFilter from './ColorBlindFilter'
@@ -30,12 +42,12 @@ const Navbar = ({ variant = 'auto' }) => {
 
   // Dashboard nav items
   const dashboardItems = [
-    { path: '/communication', label: 'Communication', icon: '🤟' },
-    { path: '/ambulance', label: 'Ambulance', icon: '🚑' },
-    { path: '/scanner', label: 'Scanner', icon: '📄' },
-    { path: '/hospitals', label: 'Hospitals', icon: '🏥' },
-    { path: '/health', label: 'Health', icon: '💪' },
-    { path: '/profile', label: 'Profile', icon: '👤' },
+    { path: '/communication', label: 'Communication', icon: <Hand size={20} /> },
+    { path: '/ambulance', label: 'Ambulance', icon: <Truck size={20} /> },
+    { path: '/scanner', label: 'Scanner', icon: <FileText size={20} /> },
+    { path: '/hospitals', label: 'Hospitals', icon: <HospitalIcon size={20} /> },
+    { path: '/health', label: 'Health', icon: <HeartPulse size={20} /> },
+    { path: '/profile', label: 'Profile', icon: <UserIcon size={20} /> },
   ]
 
   // Public nav items
@@ -52,7 +64,9 @@ const Navbar = ({ variant = 'auto' }) => {
         <div className="navbar-container">
           {/* ─── Brand ─── */}
           <Link to="/" className="navbar-brand" id="navbar-brand" onClick={() => setMobileOpen(false)}>
-            <span className="brand-icon">❤️</span>
+            <div className="brand-logo-container">
+              <Activity className="brand-activity-icon" size={28} />
+            </div>
             <span className="brand-text">AuraCare</span>
           </Link>
 
@@ -63,11 +77,7 @@ const Navbar = ({ variant = 'auto' }) => {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle navigation"
           >
-            <span className={`hamburger ${mobileOpen ? 'open' : ''}`}>
-              <span></span>
-              <span></span>
-              <span></span>
-            </span>
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
 
           {/* ─── Navigation Links ─── */}
@@ -130,9 +140,7 @@ const Navbar = ({ variant = 'auto' }) => {
                   <span className="user-name">{user?.name || 'User'}</span>
                 </div>
                 <button className="navbar-logout" onClick={handleLogout} aria-label="Sign out">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
-                  </svg>
+                  <LogOut size={18} />
                 </button>
               </>
             ) : (

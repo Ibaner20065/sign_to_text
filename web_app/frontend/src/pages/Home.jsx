@@ -1,5 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import {
+    Microscope,
+    Hospital,
+    ClipboardCheck,
+    Cpu,
+    Mic,
+    Radio,
+    Search,
+    Siren,
+    Globe,
+    Plus,
+    ArrowRight,
+    Accessibility,
+    Lock,
+    Activity,
+    Calendar,
+    UserRound,
+    Zap,
+    Eye
+} from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import AuthModal from '../components/AuthModal'
 import './Home.css'
@@ -44,7 +64,7 @@ const Home = () => {
 
     const features = [
         {
-            icon: '🔬',
+            icon: <Microscope size={28} />,
             title: 'Physician Discovery',
             description: 'Access our comprehensive directory of certified healthcare providers trained in accessible patient communication and deaf-inclusive clinical practices.',
             link: isAuthenticated ? '/hospitals' : null,
@@ -52,7 +72,7 @@ const Home = () => {
             badge: 'Sign Language Certified',
         },
         {
-            icon: '🏥',
+            icon: <Hospital size={28} />,
             title: 'Accessible Care Facilities',
             description: 'Locate accredited medical institutions with verified accessibility infrastructure, on-site interpreters, and real-time video relay interpretation services.',
             link: isAuthenticated ? '/hospitals' : null,
@@ -60,7 +80,7 @@ const Home = () => {
             badge: 'ADA Compliance Verified',
         },
         {
-            icon: '📋',
+            icon: <ClipboardCheck size={28} />,
             title: 'Patient Management Portal',
             description: 'Manage appointments, access medical translation services, review diagnostic records, and coordinate care through a unified HIPAA-compliant dashboard.',
             link: isAuthenticated ? '/communication' : null,
@@ -70,12 +90,12 @@ const Home = () => {
     ]
 
     const capabilities = [
-        { icon: '🤖', title: 'Neural Sign Recognition', desc: 'Real-time AI gesture analysis with 98.7% accuracy across ASL and ISL' },
-        { icon: '🎙️', title: 'Clinical Speech Transcription', desc: 'Medical-grade voice-to-text with specialized clinical vocabulary support' },
-        { icon: '📡', title: 'Remote Interpretation', desc: 'Secure video relay connecting certified medical interpreters on-demand' },
-        { icon: '🔍', title: 'Intelligent Document Analysis', desc: 'AI-powered medical document scanning with fraud detection capabilities' },
-        { icon: '🚨', title: 'Emergency Response System', desc: 'No-authentication emergency access for ambulance dispatch and triage' },
-        { icon: '🌍', title: 'Multi-Standard Support', desc: 'Full compliance with ASL, ISL, and BSL communication standards' },
+        { icon: <Cpu />, title: 'Neural Sign Recognition', desc: 'Real-time AI gesture analysis with 98.7% accuracy across ASL and ISL' },
+        { icon: <Mic />, title: 'Clinical Speech Transcription', desc: 'Medical-grade voice-to-text with specialized clinical vocabulary support' },
+        { icon: <Radio />, title: 'Remote Interpretation', desc: 'Secure video relay connecting certified medical interpreters on-demand' },
+        { icon: <Search />, title: 'Intelligent Document Analysis', desc: 'AI-powered medical document scanning with fraud detection capabilities' },
+        { icon: <Siren />, title: 'Emergency Response System', desc: 'No-authentication emergency access for ambulance dispatch and triage' },
+        { icon: <Globe />, title: 'Multi-Standard Support', desc: 'Full compliance with ASL, ISL, and BSL communication standards' },
     ]
 
     return (
@@ -122,19 +142,19 @@ const Home = () => {
                             {isAuthenticated ? (
                                 <>
                                     <Link to="/hospitals" className="hero-cta hero-cta-primary" id="cta-find-physician">
-                                        <span>🔬</span> Locate Physician
+                                        <Microscope size={20} /> Locate Physician
                                     </Link>
                                     <Link to="/communication" className="hero-cta hero-cta-secondary" id="cta-clinical-tools">
-                                        <span>🤖</span> Clinical Tools
+                                        <Cpu size={20} /> Clinical Tools
                                     </Link>
                                 </>
                             ) : (
                                 <>
                                     <button onClick={() => openAuth('register')} className="hero-cta hero-cta-primary" id="cta-request-access">
-                                        <span>✦</span> Request Access
+                                        <Plus size={20} /> Request Access
                                     </button>
                                     <button onClick={() => openAuth('login')} className="hero-cta hero-cta-secondary" id="cta-provider-login">
-                                        <span>→</span> Provider Login
+                                        Provider Login <ArrowRight size={20} />
                                     </button>
                                 </>
                             )}
@@ -174,10 +194,10 @@ const Home = () => {
                                 <span className="hfb-dot hfb-dot-green"></span> AI Engine: Operational
                             </div>
                             <div className="hero-float-badge hfb-bottom">
-                                <span>♿</span> WCAG 2.1 AA Compliant
+                                <Accessibility size={14} /> WCAG 2.1 AA Compliant
                             </div>
                             <div className="hero-float-badge hfb-right">
-                                <span>🔒</span> End-to-End Encrypted
+                                <Lock size={14} /> End-to-End Encrypted
                             </div>
                         </div>
                         {/* Slide indicators */}
@@ -243,15 +263,15 @@ const Home = () => {
                         <div className="booking-card booking-card-emergency" onClick={() => isAuthenticated ? navigate('/ambulance') : openAuth('login')}>
                             <div className="booking-card-glow booking-glow-yellow"></div>
                             <div className="booking-card-icon-wrap booking-icon-yellow">
-                                <span>🚑</span>
+                                <Truck size={32} />
                             </div>
                             <h3>Book Ambulance</h3>
                             <p>Request emergency medical transport with real-time GPS tracking and ETA monitoring. Priority dispatch for critical cases.</p>
                             <div className="booking-card-meta">
-                                <span className="booking-meta-tag booking-tag-yellow">⚡ Avg. Response: 8 min</span>
+                                <span className="booking-meta-tag booking-tag-yellow"><Zap size={14} /> Avg. Response: 8 min</span>
                             </div>
                             <button className="booking-card-btn booking-btn-yellow">
-                                {isAuthenticated ? 'Dispatch Now' : 'Sign In to Book'} →
+                                {isAuthenticated ? 'Dispatch Now' : 'Sign In to Book'} <ArrowRight size={18} />
                             </button>
                         </div>
 
@@ -259,15 +279,15 @@ const Home = () => {
                         <div className="booking-card" onClick={() => isAuthenticated ? navigate('/hospitals') : openAuth('login')}>
                             <div className="booking-card-glow booking-glow-cyan"></div>
                             <div className="booking-card-icon-wrap booking-icon-cyan">
-                                <span>🏥</span>
+                                <Hospital size={32} />
                             </div>
                             <h3>Reserve Hospital Bed</h3>
                             <p>Check real-time bed availability across partner facilities. Reserve ICU, general ward, or specialized accessible rooms.</p>
                             <div className="booking-card-meta">
-                                <span className="booking-meta-tag booking-tag-cyan">♿ Accessible Rooms Available</span>
+                                <span className="booking-meta-tag booking-tag-cyan"><Accessibility size={14} /> Accessible Rooms Available</span>
                             </div>
                             <button className="booking-card-btn booking-btn-cyan">
-                                {isAuthenticated ? 'Check Availability' : 'Sign In to Book'} →
+                                {isAuthenticated ? 'Check Availability' : 'Sign In to Book'} <ArrowRight size={18} />
                             </button>
                         </div>
 
@@ -275,15 +295,15 @@ const Home = () => {
                         <div className="booking-card" onClick={() => isAuthenticated ? navigate('/hospitals') : openAuth('login')}>
                             <div className="booking-card-glow booking-glow-purple"></div>
                             <div className="booking-card-icon-wrap booking-icon-purple">
-                                <span>📅</span>
+                                <Calendar size={32} />
                             </div>
                             <h3>Schedule Appointment</h3>
                             <p>Book consultations with sign-language certified physicians. Video, in-person, or hybrid appointments available.</p>
                             <div className="booking-card-meta">
-                                <span className="booking-meta-tag booking-tag-purple">🤟 ASL-Certified Doctors</span>
+                                <span className="booking-meta-tag booking-tag-purple"><Activity size={14} /> Certified Doctors</span>
                             </div>
                             <button className="booking-card-btn booking-btn-purple">
-                                {isAuthenticated ? 'Schedule Now' : 'Sign In to Book'} →
+                                {isAuthenticated ? 'Schedule Now' : 'Sign In to Book'} <ArrowRight size={18} />
                             </button>
                         </div>
 
@@ -291,15 +311,15 @@ const Home = () => {
                         <div className="booking-card" onClick={() => isAuthenticated ? navigate('/communication') : openAuth('login')}>
                             <div className="booking-card-glow booking-glow-gradient"></div>
                             <div className="booking-card-icon-wrap booking-icon-gradient">
-                                <span>🧑‍⚕️</span>
+                                <UserRound size={32} />
                             </div>
                             <h3>Request Interpreter</h3>
                             <p>Connect with certified medical sign language interpreters for your upcoming appointment or ongoing consultation.</p>
                             <div className="booking-card-meta">
-                                <span className="booking-meta-tag booking-tag-gradient">📡 Available 24/7</span>
+                                <span className="booking-meta-tag booking-tag-gradient"><Radio size={14} /> Available 24/7</span>
                             </div>
                             <button className="booking-card-btn booking-btn-gradient">
-                                {isAuthenticated ? 'Request Now' : 'Sign In to Book'} →
+                                {isAuthenticated ? 'Request Now' : 'Sign In to Book'} <ArrowRight size={18} />
                             </button>
                         </div>
                     </div>
@@ -336,14 +356,14 @@ const Home = () => {
                         </p>
                         <div className="mission-feature-list">
                             <div className="mission-feature-item">
-                                <span className="feature-marker">⚡</span>
+                                <div className="feature-marker-wrap"><Zap size={20} /></div>
                                 <div>
                                     <h4>Real-Time Transcription</h4>
                                     <p>Zero-lag conversion from ASL/ISL to text for immediate physician review.</p>
                                 </div>
                             </div>
                             <div className="mission-feature-item">
-                                <span className="feature-marker">👁️</span>
+                                <div className="feature-marker-wrap"><Eye size={20} /></div>
                                 <div>
                                     <h4>Skeletal Hand Tracking</h4>
                                     <p>High-precision tracking of 21 finger joints for perfect gesture capture.</p>
@@ -385,14 +405,16 @@ const Home = () => {
             <section className="emergency-banner">
                 <div className="emergency-container">
                     <div className="emergency-content">
-                        <span className="emergency-icon">🚨</span>
+                        <div className="emergency-icon-wrap">
+                            <Siren size={32} />
+                        </div>
                         <div>
                             <h3>Critical Care Access — No Authentication Required</h3>
                             <p>Immediate access to emergency dispatch, ambulance tracking, and nearest facility location services</p>
                         </div>
                     </div>
                     <Link to="/ambulance" className="emergency-cta" id="cta-emergency-access">
-                        Access Emergency Services →
+                        Access Emergency Services <ArrowRight size={20} />
                     </Link>
                 </div>
             </section>
@@ -402,7 +424,7 @@ const Home = () => {
                 <div className="footer-container">
                     <div className="footer-top">
                         <div className="footer-brand">
-                            <span className="footer-logo">⚕</span>
+                            <Activity className="footer-logo-icon" size={32} />
                             <span className="footer-name">AuraCare</span>
                             <p className="footer-tagline">Next-Generation Accessible Healthcare Technology</p>
                         </div>
@@ -430,10 +452,10 @@ const Home = () => {
                     <div className="footer-bottom">
                         <p>© 2025 AuraCare Medical Technologies. All rights reserved.</p>
                         <div className="footer-compliance-tags">
-                            <span className="footer-tag">♿ WCAG 2.1</span>
-                            <span className="footer-tag">🔒 HIPAA</span>
-                            <span className="footer-tag">🤟 ASL/ISL</span>
-                            <span className="footer-tag">🔬 FDA</span>
+                            <span className="footer-tag"><Accessibility size={12} /> WCAG 2.1</span>
+                            <span className="footer-tag"><Lock size={12} /> HIPAA</span>
+                            <span className="footer-tag"><Hand size={12} /> ASL/ISL</span>
+                            <span className="footer-tag"><Microscope size={12} /> FDA</span>
                         </div>
                     </div>
                 </div>
@@ -457,7 +479,7 @@ const FeatureCardContent = ({ feature }) => (
         <h3 className="feature-card-title">{feature.title}</h3>
         <p className="feature-card-desc">{feature.description}</p>
         <div className="feature-card-badge">{feature.badge}</div>
-        <div className="feature-card-arrow">→</div>
+        <div className="feature-card-arrow"><ArrowRight size={20} /></div>
     </>
 )
 

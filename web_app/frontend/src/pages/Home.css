@@ -137,8 +137,9 @@
 }
 
 .hero-cta {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     padding: 14px 28px;
     border-radius: 12px;
@@ -500,9 +501,16 @@
 }
 
 .feature-card-icon {
-    font-size: 2.5rem;
-    margin-bottom: 16px;
-    filter: drop-shadow(0 0 8px rgba(0, 245, 212, 0.2));
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 245, 212, 0.05);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: #00F5D4;
+    transition: all 0.3s ease;
 }
 
 .feature-card-title {
@@ -671,7 +679,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.6rem;
     margin-bottom: 18px;
     position: relative;
     z-index: 1;
@@ -721,10 +728,10 @@
 .booking-meta-tag {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     font-size: 0.68rem;
     font-weight: 600;
-    padding: 5px 10px;
+    padding: 5px 12px;
     border-radius: 9999px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -756,6 +763,10 @@
 
 /* CTA Buttons */
 .booking-card-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
     padding: 12px;
     border: none;
@@ -957,17 +968,23 @@
     gap: 20px;
 }
 
-.feature-marker {
+.feature-marker-wrap {
     width: 48px;
     height: 48px;
-    background: rgba(0, 245, 212, 0.06);
-    border: 1px solid rgba(0, 245, 212, 0.2);
+    background: rgba(0, 245, 212, 0.08);
+    border: 1px solid rgba(0, 245, 212, 0.15);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    color: #00F5D4;
     flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.mission-feature-item:hover .feature-marker-wrap {
+    background: rgba(0, 245, 212, 0.15);
+    transform: scale(1.05) rotate(5deg);
 }
 
 .mission-feature-item h4 {
@@ -1064,10 +1081,21 @@
 }
 
 .capability-icon {
-    font-size: 2rem;
-    display: block;
+    width: 44px;
+    height: 44px;
+    background: rgba(155, 93, 229, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 14px;
-    filter: drop-shadow(0 0 6px rgba(155, 93, 229, 0.3));
+    color: #9B5DE5;
+    transition: all 0.3s ease;
+}
+
+.capability-card:hover .capability-icon {
+    background: rgba(155, 93, 229, 0.2);
+    transform: scale(1.1);
 }
 
 .capability-card h3 {
@@ -1122,9 +1150,17 @@
     color: white;
 }
 
-.emergency-icon {
-    font-size: 2.5rem;
-    filter: drop-shadow(0 0 12px rgba(254, 228, 64, 0.4));
+.emergency-icon-wrap {
+    width: 60px;
+    height: 60px;
+    background: rgba(254, 228, 64, 0.1);
+    border: 1px solid rgba(254, 228, 64, 0.2);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FEE440;
+    flex-shrink: 0;
 }
 
 .emergency-content h3 {
@@ -1181,9 +1217,9 @@
     max-width: 280px;
 }
 
-.footer-logo {
-    font-size: 1.5rem;
-    margin-right: 8px;
+.footer-logo-icon {
+    color: #00F5D4;
+    margin-right: 12px;
 }
 
 .footer-name {
@@ -1250,14 +1286,23 @@
 }
 
 .footer-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.7rem;
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 6px 14px;
     border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: #475569;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #64748b;
     letter-spacing: 0.04em;
+    transition: all 0.2s ease;
+}
+
+.footer-tag:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #00F5D4;
 }
 
 /* ═══ RESPONSIVE ═══ */

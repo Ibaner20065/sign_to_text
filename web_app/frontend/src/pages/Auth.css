@@ -59,10 +59,31 @@
   margin-bottom: var(--space-8);
 }
 
-.auth-brand-icon {
-  font-size: 2.5rem;
-  margin-bottom: var(--space-3);
-  display: block;
+.auth-brand-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: rgba(239, 68, 68, 0.08);
+  border-radius: var(--radius-xl);
+  margin: 0 auto var(--space-4);
+  color: var(--primary-500);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.auth-brand-logo::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: inherit;
+  animation: pulse 3s infinite;
+}
+
+.auth-brand-logo svg {
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.4));
   animation: float 3s ease-in-out infinite;
 }
 
@@ -115,6 +136,28 @@
   font-size: 1rem;
   font-weight: 600;
   margin-top: var(--space-2);
+}
+
+.auth-card .form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  cursor: pointer;
+  user-select: none;
+}
+
+.auth-card .form-checkbox input[type="checkbox"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: var(--primary-500);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.auth-card .form-checkbox span {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
 .auth-divider {

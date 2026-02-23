@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Activity } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import './Auth.css'
 
@@ -7,6 +8,7 @@ const Register = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(true)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { register } = useAuth()
@@ -22,7 +24,7 @@ const Register = () => {
     }
 
     setLoading(true)
-    const result = await register(name, email, password)
+    const result = await register(name, email, password, rememberMe)
     setLoading(false)
 
     if (result.success) {
@@ -36,7 +38,9 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-brand">
-          <span className="auth-brand-icon">❤️</span>
+          <div className="auth-brand-logo">
+            <Activity size={32} />
+          </div>
           <span className="auth-brand-name">AuraCare</span>
         </div>
         <h1>Create Account</h1>
@@ -81,6 +85,14 @@ const Register = () => {
               autoComplete="new-password"
             />
           </div>
+          <label className="form-checkbox">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            <span>Remember me (Stay signed in)</span>
+          </label>
           {error && <div className="error-message" id="register-error">{error}</div>}
           <button type="submit" className="button button-primary" id="register-submit" disabled={loading}>
             {loading ? (

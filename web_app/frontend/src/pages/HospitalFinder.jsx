@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
+import { Hospital, Heart, Brain, Baby, Siren, MapPin } from 'lucide-react'
 
 import './HospitalFinder.css'
 
@@ -66,12 +67,12 @@ const HospitalFinder = () => {
   const specialties = ['All', 'General', 'Cardiology', 'Neurology', 'Pediatrics', 'Emergency']
 
   const specialtyIcons = {
-    All: '🏥',
-    General: '🏥',
-    Cardiology: '❤️',
-    Neurology: '🧠',
-    Pediatrics: '👶',
-    Emergency: '🚨',
+    All: <Hospital size={16} />,
+    General: <Hospital size={16} />,
+    Cardiology: <Heart size={16} />,
+    Neurology: <Brain size={16} />,
+    Pediatrics: <Baby size={16} />,
+    Emergency: <Siren size={16} />,
   }
 
   useEffect(() => {
@@ -151,7 +152,7 @@ const HospitalFinder = () => {
 
   return (
     <div id="hospitals-page">
-      <h1 className="page-title">🏥 Hospital Finder</h1>
+      <h1 className="page-title"><Hospital size={36} style={{ verticalAlign: 'middle', marginRight: '12px' }} /> Hospital Finder</h1>
 
       <div className="hospital-container">
         <div className="filter-section" id="filter-section">
@@ -163,6 +164,7 @@ const HospitalFinder = () => {
                 className={`specialty-button ${selectedSpecialty === specialty ? 'active' : ''}`}
                 onClick={() => setSelectedSpecialty(specialty)}
                 id={`filter-${specialty.toLowerCase()}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
               >
                 {specialtyIcons[specialty]} {specialty}
               </button>
@@ -194,7 +196,7 @@ const HospitalFinder = () => {
               </Marker>
             ))}
             <Marker position={userLocation} icon={userIcon}>
-              <Popup>📍 Your Location</Popup>
+              <Popup><MapPin size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> Your Location</Popup>
             </Marker>
           </MapContainer>
         </div>
@@ -207,7 +209,7 @@ const HospitalFinder = () => {
           <div className="list-container">
             {filteredHospitals.map((hospital) => (
               <div key={hospital.id} className="hospital-card">
-                <span className={`specialty-tag ${getSpecialtyClass(hospital.specialty)}`}>
+                <span className={`specialty-tag ${getSpecialtyClass(hospital.specialty)}`} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {specialtyIcons[hospital.specialty]} {hospital.specialty}
                 </span>
                 <h4>{hospital.name}</h4>

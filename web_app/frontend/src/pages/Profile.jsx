@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { User, Camera, Mail, Settings, Volume2, Lock, Key, LogOut, CheckCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import './Profile.css'
 
@@ -106,7 +107,7 @@ const Profile = () => {
 
   return (
     <div id="profile-page">
-      <h1 className="page-title">👤 Profile & Settings</h1>
+      <h1 className="page-title"><User size={36} style={{ verticalAlign: 'middle', marginRight: '12px' }} /> Profile & Settings</h1>
 
       <div className="profile-container">
         {/* Profile Info */}
@@ -117,7 +118,7 @@ const Profile = () => {
                 <img src={profilePic} alt="Profile" className="profile-pic" />
               ) : (
                 <div className="profile-pic-placeholder">
-                  {user?.name?.charAt(0)?.toUpperCase() || '👤'}
+                  {user?.name?.charAt(0)?.toUpperCase() || <User />}
                 </div>
               )}
               <input
@@ -127,14 +128,14 @@ const Profile = () => {
                 className="file-input"
                 id="profile-pic-input"
               />
-              <label htmlFor="profile-pic-input" className="profile-pic-label">
-                📷 Change Photo
+              <label htmlFor="profile-pic-input" className="profile-pic-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                <Camera size={18} /> Change Photo
               </label>
             </div>
             <div className="profile-info">
               <p className="profile-name">{user?.name || 'User'}</p>
-              <p className="profile-email">
-                ✉️ {user?.email || 'user@example.com'}
+              <p className="profile-email" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Mail size={16} /> {user?.email || 'user@example.com'}
               </p>
             </div>
           </div>
@@ -142,7 +143,7 @@ const Profile = () => {
 
         {/* Accessibility Settings */}
         <div className="card">
-          <h2>⚙️ Accessibility Preferences</h2>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Settings size={22} /> Accessibility Preferences</h2>
           <div className="settings-section" id="accessibility-settings">
             {/* Font Size */}
             <div className="setting-item">
@@ -190,7 +191,7 @@ const Profile = () => {
             <div className="setting-item">
               <div className="setting-header">Text-to-Speech Speed</div>
               <div className="slider-wrapper">
-                <div className="slider-value">🔊 {settings.ttsSpeed.toFixed(1)}x</div>
+                <div className="slider-value" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Volume2 size={18} /> {settings.ttsSpeed.toFixed(1)}x</div>
                 <input
                   type="range"
                   min="0.5"
@@ -212,7 +213,7 @@ const Profile = () => {
 
         {/* Change Password */}
         <div className="card">
-          <h2>🔒 Change Password</h2>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Lock size={22} /> Change Password</h2>
           <form onSubmit={handlePasswordChange} className="password-form" id="password-form">
             <div className="form-group">
               <label className="label" htmlFor="new-password">New Password</label>
@@ -243,16 +244,16 @@ const Profile = () => {
                 {message}
               </div>
             )}
-            <button type="submit" className="button button-primary" id="change-password-btn">
-              🔑 Update Password
+            <button type="submit" className="button button-primary" id="change-password-btn" style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
+              <Key size={18} /> Update Password
             </button>
           </form>
         </div>
 
         {/* Logout */}
         <div className="card">
-          <button className="button button-danger logout-button" onClick={handleLogout} id="logout-button">
-            🚪 Logout
+          <button className="button button-danger logout-button" onClick={handleLogout} id="logout-button" style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
+            <LogOut size={18} /> Logout
           </button>
         </div>
       </div>

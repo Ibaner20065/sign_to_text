@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Hands } from '@mediapipe/hands'
 import { Camera } from '@mediapipe/camera_utils'
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils'
+import { Hand, Mic, Volume2, Trash2, Clipboard, BookOpen, X, CheckCircle, Info, AlertTriangle, AlertOctagon, MicOff, Square, MessageSquare, ThumbsUp, Fist, MousePointer2, User, HandMetal } from 'lucide-react'
 
 const HAND_CONNECTIONS = [
   [0, 1], [1, 2], [2, 3], [3, 4],
@@ -480,20 +481,20 @@ const Communication = () => {
 
   // ── Gesture guide data ──
   const gestureGuide = [
-    { gesture: 'hello', icon: '👋', desc: 'Open palm, all fingers spread' },
-    { gesture: 'yes', icon: '👍', desc: 'Thumbs up, fist closed' },
-    { gesture: 'no', icon: '✊', desc: 'Closed fist, no fingers out' },
-    { gesture: 'I', icon: '🤙', desc: 'Only pinky finger extended' },
-    { gesture: 'you', icon: '👆', desc: 'Only index finger pointing' },
-    { gesture: 'ME', icon: '👈', desc: 'Index + thumb out (point at self)' },
-    { gesture: 'peace', icon: '✌️', desc: 'Index + middle fingers (V sign)' },
-    { gesture: 'stop', icon: '✋', desc: 'Palm forward, fingers together' },
-    { gesture: 'help', icon: '🤙', desc: 'Thumb + pinky extended (hang loose)' },
+    { gesture: 'hello', icon: <Hand size={24} />, desc: 'Open palm, all fingers spread' },
+    { gesture: 'yes', icon: <ThumbsUp size={24} />, desc: 'Thumbs up, fist closed' },
+    { gesture: 'no', icon: <Fist size={24} />, desc: 'Closed fist, no fingers out' },
+    { gesture: 'I', icon: <MessageSquare size={24} />, desc: 'Only pinky finger extended' },
+    { gesture: 'you', icon: <MousePointer2 size={24} />, desc: 'Only index finger pointing' },
+    { gesture: 'ME', icon: <User size={24} />, desc: 'Index + thumb out (point at self)' },
+    { gesture: 'peace', icon: <HandMetal size={24} />, desc: 'Index + middle fingers (V sign)' },
+    { gesture: 'stop', icon: <Hand size={24} />, desc: 'Palm forward, fingers together' },
+    { gesture: 'help', icon: <AlertTriangle size={24} />, desc: 'Thumb + pinky extended (hang loose)' },
   ]
 
   return (
     <div id="communication-page">
-      <h1 className="page-title">🤟 Communication</h1>
+      <h1 className="page-title"><Hand size={36} style={{ verticalAlign: 'middle', marginRight: '12px' }} /> Communication</h1>
 
       <div className="mode-toggle" id="mode-toggle">
         <button
@@ -501,14 +502,14 @@ const Communication = () => {
           onClick={() => setMode('sign')}
           id="mode-sign"
         >
-          ✋ Sign to Speech
+          <Hand size={18} /> Sign to Speech
         </button>
         <button
           className={`mode-button ${mode === 'speech' ? 'active' : ''}`}
           onClick={() => setMode('speech')}
           id="mode-speech"
         >
-          🎤 Speech to Text
+          <Mic size={18} /> Speech to Text
         </button>
       </div>
 
@@ -558,20 +559,20 @@ const Communication = () => {
               </div>
               <div className="controls">
                 <button className="button button-primary" onClick={handleSpeak} disabled={!sentence} id="btn-speak">
-                  🔊 Speak
+                  <Volume2 size={18} /> Speak
                 </button>
                 <button className="button button-secondary" onClick={handleClear} id="btn-clear-sign">
-                  🗑️ Clear
+                  <Trash2 size={18} /> Clear
                 </button>
                 <button className="button button-secondary" onClick={handleCopy} disabled={!sentence} id="btn-copy">
-                  📋 Copy
+                  <Clipboard size={18} /> Copy
                 </button>
                 <button
                   className="button button-secondary"
                   onClick={() => setShowGuide(!showGuide)}
                   id="btn-guide"
                 >
-                  {showGuide ? '✕ Hide Guide' : '📖 Gesture Guide'}
+                  {showGuide ? <><X size={18} /> Hide Guide</> : <><BookOpen size={18} /> Gesture Guide</>}
                 </button>
               </div>
             </div>
@@ -603,8 +604,12 @@ const Communication = () => {
 
             {/* Status message */}
             {speechStatus && (
-              <div className={`speech-status ${speechStatus.startsWith('❌') ? 'error' : speechStatus.startsWith('⚠️') ? 'warning' : 'info'}`} id="speech-status">
-                {speechStatus}
+              <div className={`speech-status ${speechStatus.includes('❌') ? 'error' : speechStatus.includes('⚠️') ? 'warning' : 'info'}`} id="speech-status">
+                {speechStatus.includes('❌') && <AlertOctagon size={18} />}
+                {speechStatus.includes('⚠️') && <AlertTriangle size={18} />}
+                {speechStatus.includes('🎤') && <Mic size={18} />}
+                {speechStatus.includes('🔇') && <MicOff size={18} />}
+                {speechStatus.replace(/[❌⚠️🎤🔇]/g, '')}
               </div>
             )}
 
@@ -617,21 +622,21 @@ const Communication = () => {
 
             <div className="transcript-container" id="transcript-container">
               <div className={`transcript-text ${!transcript ? 'empty' : ''}`}>
-                {transcript || '🎤 Press "Start Recording" to begin live captioning...'}
+                {transcript || <><Mic size={24} style={{ opacity: 0.5, marginBottom: '12px' }} /><br />Press "Start Recording" to begin live captioning...</>}
               </div>
             </div>
             <div className="controls">
               {!isRecording ? (
                 <button className="button button-primary" onClick={startSpeechRecognition} id="btn-start-recording">
-                  🎤 Start Recording
+                  <Mic size={18} /> Start Recording
                 </button>
               ) : (
                 <button className="button button-danger" onClick={stopSpeechRecognition} id="btn-stop-recording">
-                  ⏹️ Stop Recording
+                  <Square size={18} /> Stop Recording
                 </button>
               )}
               <button className="button button-secondary" onClick={clearTranscript} id="btn-clear-transcript">
-                🗑️ Clear
+                <Trash2 size={18} /> Clear
               </button>
             </div>
           </div>
@@ -640,7 +645,7 @@ const Communication = () => {
 
       {showCopyToast && (
         <div className="copy-toast" id="copy-toast">
-          ✅ Copied to clipboard!
+          <CheckCircle size={18} /> Copied to clipboard!
         </div>
       )}
     </div>

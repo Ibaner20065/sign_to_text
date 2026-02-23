@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { Activity, Flame, Footprints, Droplets, Dumbbell, Zap, Heart, CheckCircle, TrendingUp, X } from 'lucide-react'
 import './Health.css'
 
 // ─── Helpers ──────────────────────────────────────────
@@ -16,12 +17,12 @@ const DEFAULT_DAILY = { steps: 0, calories: 0, water: 0, heartRate: 72 }
 const DEFAULT_GOALS = { steps: 10000, water: 2500, calories: 500, exercise: 30 }
 
 const EXERCISE_TYPES = [
-    { type: 'Walking', icon: '🚶', met: 3.5, color: '#10b981' },
-    { type: 'Running', icon: '🏃', met: 8.0, color: '#ef4444' },
-    { type: 'Yoga', icon: '🧘', met: 2.5, color: '#8b5cf6' },
-    { type: 'Physio', icon: '🦽', met: 3.0, color: '#f59e0b' },
-    { type: 'Gym', icon: '🏋️', met: 6.0, color: '#3b82f6' },
-    { type: 'Cycling', icon: '🚴', met: 7.0, color: '#06b6d4' },
+    { type: 'Walking', icon: <Footprints size={20} />, met: 3.5, color: '#10b981' },
+    { type: 'Running', icon: <Activity size={20} />, met: 8.0, color: '#ef4444' },
+    { type: 'Yoga', icon: <Activity size={20} />, met: 2.5, color: '#8b5cf6' },
+    { type: 'Physio', icon: <Activity size={20} />, met: 3.0, color: '#f59e0b' },
+    { type: 'Gym', icon: <Dumbbell size={20} />, met: 6.0, color: '#3b82f6' },
+    { type: 'Cycling', icon: <Activity size={20} />, met: 7.0, color: '#06b6d4' },
 ]
 
 const Health = () => {
@@ -131,10 +132,10 @@ const Health = () => {
     return (
         <div id="health-page">
             <div className="health-header">
-                <h1 className="page-title">💪 Health Monitor</h1>
+                <h1 className="page-title"><Activity size={32} style={{ verticalAlign: 'middle', marginRight: '12px' }} /> Health Monitor</h1>
                 {streak > 0 && (
-                    <div className="streak-badge" id="streak-badge">
-                        🔥 {streak} day streak
+                    <div className="streak-badge" id="streak-badge" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Zap size={16} /> {streak} day streak
                     </div>
                 )}
             </div>
@@ -143,7 +144,7 @@ const Health = () => {
             <div className="stats-grid" id="stats-grid">
                 {/* Steps Card */}
                 <div className="stat-card steps-card" id="steps-card">
-                    <div className="stat-icon">👟</div>
+                    <div className="stat-icon"><Footprints size={24} /></div>
                     <div className="stat-info">
                         <span className="stat-label">Steps</span>
                         <span className="stat-value">{dailyData.steps.toLocaleString()}</span>
@@ -164,7 +165,7 @@ const Health = () => {
 
                 {/* Calories Card */}
                 <div className="stat-card calories-card" id="calories-card">
-                    <div className="stat-icon">🔥</div>
+                    <div className="stat-icon"><Flame size={24} /></div>
                     <div className="stat-info">
                         <span className="stat-label">Calories</span>
                         <span className="stat-value">{(dailyData.calories + totalExerciseCalories).toLocaleString()}</span>
@@ -180,7 +181,7 @@ const Health = () => {
 
                 {/* Heart Rate Card */}
                 <div className="stat-card heart-card" id="heart-card">
-                    <div className="stat-icon heart-pulse">❤️</div>
+                    <div className="stat-icon heart-pulse"><Heart size={24} /></div>
                     <div className="stat-info">
                         <span className="stat-label">Heart Rate</span>
                         <span className="stat-value">{dailyData.heartRate} <small>bpm</small></span>
@@ -196,7 +197,7 @@ const Health = () => {
 
                 {/* Water Card */}
                 <div className="stat-card water-card" id="water-card">
-                    <div className="stat-icon">💧</div>
+                    <div className="stat-icon"><Droplets size={24} /></div>
                     <div className="stat-info">
                         <span className="stat-label">Water</span>
                         <span className="stat-value">{dailyData.water} <small>ml</small></span>
@@ -217,22 +218,34 @@ const Health = () => {
 
             {/* ─── Activity Progress Bars ─── */}
             <div className="card" id="activity-progress">
-                <h2 className="section-title">📊 Daily Progress</h2>
+                <h2 className="section-title"><TrendingUp size={22} style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Daily Progress</h2>
                 <div className="progress-bars">
                     <div className="progress-item">
-                        <div className="progress-label"><span>👟 Steps</span><span>{dailyData.steps} / {goals.steps}</span></div>
+                        <div className="progress-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Footprints size={16} /> Steps</div>
+                            <span>{dailyData.steps} / {goals.steps}</span>
+                        </div>
                         <div className="progress-bar"><div className="progress-fill steps-fill" style={{ width: `${stepsProgress}%` }}></div></div>
                     </div>
                     <div className="progress-item">
-                        <div className="progress-label"><span>🔥 Calories</span><span>{dailyData.calories + totalExerciseCalories} / {goals.calories}</span></div>
+                        <div className="progress-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Flame size={16} /> Calories</div>
+                            <span>{dailyData.calories + totalExerciseCalories} / {goals.calories}</span>
+                        </div>
                         <div className="progress-bar"><div className="progress-fill calories-fill" style={{ width: `${caloriesProgress}%` }}></div></div>
                     </div>
                     <div className="progress-item">
-                        <div className="progress-label"><span>💧 Water</span><span>{dailyData.water} / {goals.water} ml</span></div>
+                        <div className="progress-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Droplets size={16} /> Water</div>
+                            <span>{dailyData.water} / {goals.water} ml</span>
+                        </div>
                         <div className="progress-bar"><div className="progress-fill water-fill" style={{ width: `${waterProgress}%` }}></div></div>
                     </div>
                     <div className="progress-item">
-                        <div className="progress-label"><span>🏋️ Exercise</span><span>{totalExerciseMinutes} / {goals.exercise} min</span></div>
+                        <div className="progress-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Dumbbell size={16} /> Exercise</div>
+                            <span>{totalExerciseMinutes} / {goals.exercise} min</span>
+                        </div>
                         <div className="progress-bar"><div className="progress-fill exercise-fill" style={{ width: `${exerciseProgress}%` }}></div></div>
                     </div>
                 </div>
@@ -243,13 +256,13 @@ const Health = () => {
                 {/* Exercise Log */}
                 <div className="card" id="exercise-log">
                     <div className="section-header">
-                        <h2 className="section-title">🏃 Exercise Log</h2>
+                        <h2 className="section-title"><Dumbbell size={22} style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Exercise Log</h2>
                         <button className="button button-primary" onClick={() => setShowModal(true)} id="btn-add-exercise">
                             + Add Exercise
                         </button>
                     </div>
                     {exercises.length === 0 ? (
-                        <p className="empty-state">No exercises logged today. Start moving! 💪</p>
+                        <p className="empty-state">No exercises logged today. Start moving! <Activity size={18} style={{ verticalAlign: 'middle' }} /></p>
                     ) : (
                         <div className="exercise-list">
                             {exercises.map(ex => (
@@ -259,7 +272,7 @@ const Health = () => {
                                         <strong>{ex.type}</strong>
                                         <span>{ex.duration} min • {ex.calories} kcal • {ex.time}</span>
                                     </div>
-                                    <button className="remove-btn" onClick={() => removeExercise(ex.id)} aria-label="Remove">✕</button>
+                                    <button className="remove-btn" onClick={() => removeExercise(ex.id)} aria-label="Remove"><X size={16} /></button>
                                 </div>
                             ))}
                             <div className="exercise-summary">
@@ -272,7 +285,7 @@ const Health = () => {
                 {/* Weekly Chart */}
                 <div className="card" id="weekly-chart">
                     <div className="section-header">
-                        <h2 className="section-title">📈 Weekly Activity</h2>
+                        <h2 className="section-title"><TrendingUp size={22} style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Weekly Activity</h2>
                         <div className="chart-toggle">
                             <button className={`toggle-btn ${chartMetric === 'steps' ? 'active' : ''}`} onClick={() => setChartMetric('steps')}>Steps</button>
                             <button className={`toggle-btn ${chartMetric === 'calories' ? 'active' : ''}`} onClick={() => setChartMetric('calories')}>Calories</button>

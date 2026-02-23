@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react'
-import { supabase } from '../supabaseClient'
+import { supabase, setRememberMe } from '../supabaseClient'
 
 const AuthContext = createContext()
 
@@ -47,8 +47,11 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe()
   }, [])
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe = true) => {
     try {
+      // Set the persistence preference before signing in
+      setRememberMe(rememberMe)
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -64,8 +67,11 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const register = async (name, email, password) => {
+  const register = async (name, email, password, rememberMe = true) => {
     try {
+      // Set the persistence preference before signing up
+      setRememberMe(rememberMe)
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,

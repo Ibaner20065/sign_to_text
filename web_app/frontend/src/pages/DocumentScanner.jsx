@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { FileText, CheckCircle, Folder, Search, RotateCcw, ClipboardList, ShieldAlert, AlertTriangle } from 'lucide-react'
 
 import './DocumentScanner.css'
 
@@ -109,7 +110,7 @@ const DocumentScanner = () => {
 
   return (
     <div id="scanner-page">
-      <h1 className="page-title">📄 Document Scanner</h1>
+      <h1 className="page-title"><FileText size={36} style={{ verticalAlign: 'middle', marginRight: '12px' }} /> Document Scanner</h1>
 
       <div className="scanner-container">
         <div className="card">
@@ -136,13 +137,13 @@ const DocumentScanner = () => {
               />
               {file ? (
                 <>
-                  <span className="upload-icon">✅</span>
+                  <CheckCircle size={48} color="#2dd4bf" style={{ marginBottom: '16px' }} />
                   <p className="upload-text"><strong>{file.name}</strong></p>
                   <p className="upload-hint">Click to change file</p>
                 </>
               ) : (
                 <>
-                  <span className="upload-icon">📁</span>
+                  <Folder size={48} color="#94a3b8" style={{ marginBottom: '16px' }} />
                   <p className="upload-text">Drop your document here or click to browse</p>
                   <p className="upload-hint">Supports JPG, PNG, PDF</p>
                 </>
@@ -169,12 +170,12 @@ const DocumentScanner = () => {
                   Scanning...
                 </>
               ) : (
-                '🔍 Scan Document'
+                <><Search size={18} /> Scan Document</>
               )}
             </button>
             {file && (
               <button className="button button-ghost" onClick={handleReset} id="reset-button">
-                🔄 Reset
+                <RotateCcw size={18} /> Reset
               </button>
             )}
           </div>
@@ -183,18 +184,18 @@ const DocumentScanner = () => {
         {scanResult && (
           <div className="results-container" id="scan-results">
             <div className="card">
-              <h3>📝 Raw OCR Text</h3>
+              <h3><ClipboardList size={20} style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Raw OCR Text</h3>
               <div className="ocr-text" id="ocr-text">
                 {scanResult.text || 'No text extracted'}
               </div>
             </div>
 
             <div className="card">
-              <h3>🔎 Analysis Result</h3>
+              <h3><ShieldAlert size={20} style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Analysis Result</h3>
               {scanResult.is_suspicious ? (
                 <div>
                   <div className="flagged-badge" id="suspicious-badge">
-                    ⚠️ Suspicious Content Detected
+                    <AlertTriangle size={18} /> Suspicious Content Detected
                   </div>
                   <div className="flagged-items">
                     <h4>Flagged Keywords & Issues:</h4>
@@ -215,7 +216,7 @@ const DocumentScanner = () => {
                 </div>
               ) : (
                 <div className="clean-badge" id="clean-badge">
-                  ✅ No suspicious content detected — Document appears clean
+                  <CheckCircle size={18} /> No suspicious content detected — Document appears clean
                 </div>
               )}
             </div>

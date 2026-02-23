@@ -44,8 +44,30 @@
   color: var(--text-primary);
 }
 
-.brand-icon {
-  font-size: 1.4rem;
+.brand-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 245, 212, 0.1);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-logo-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 245, 212, 0.3), transparent 70%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.brand-activity-icon {
+  color: #00F5D4;
+  filter: drop-shadow(0 0 8px rgba(0, 245, 212, 0.6));
+  z-index: 1;
   animation: float 3s ease-in-out infinite;
 }
 
@@ -54,6 +76,8 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 800;
+  font-size: 1.4rem;
 }
 
 /* --- Links --- */
@@ -103,7 +127,19 @@
 }
 
 .navbar-icon {
-  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #52ecda;
+  transition: transform 0.3s ease;
+}
+
+.navbar-link:hover .navbar-icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.navbar-link.active .navbar-icon {
+  color: #00F5D4;
 }
 
 .navbar-label {
@@ -218,39 +254,19 @@
 /* --- Mobile Toggle --- */
 .navbar-toggle {
   display: none;
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
-  padding: var(--space-2);
+  padding: 8px;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
   z-index: 200;
+  transition: all 0.3s ease;
 }
 
-.hamburger {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  width: 24px;
-}
-
-.hamburger span {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: var(--text-primary);
-  border-radius: 2px;
-  transition: all var(--transition-base);
-}
-
-.hamburger.open span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-
-.hamburger.open span:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger.open span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
+.navbar-toggle:hover {
+  background: rgba(0, 245, 212, 0.1);
+  color: #00F5D4;
 }
 
 /* --- Responsive --- */
