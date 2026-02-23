@@ -13,8 +13,12 @@ const Home = () => {
 
     const heroSlides = [
         {
-            image: 'https://images.unsplash.com/photo-1573497019707-1c0453306e12?w=1200&q=80',
+            image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&q=80',
             alt: 'Deaf individual using sign language to communicate via high-tech computer interface with real-time translation',
+        },
+        {
+            image: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1200&q=80',
+            alt: 'Clinical professional using the AuraCare sign-to-speech engine',
         },
         {
             image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80',

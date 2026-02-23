@@ -13,6 +13,7 @@ import HospitalFinder from './pages/HospitalFinder'
 import Profile from './pages/Profile'
 import Emergency from './pages/Emergency'
 import AIChatbot from './components/AIChatbot'
+import Health from './pages/Health'
 import './App.css'
 
 function App() {
