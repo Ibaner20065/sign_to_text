@@ -18,7 +18,8 @@ import {
     Calendar,
     UserRound,
     Zap,
-    Eye
+    Eye,
+    Truck
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import AuthModal from '../components/AuthModal'
