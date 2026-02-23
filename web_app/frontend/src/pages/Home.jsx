@@ -19,7 +19,8 @@ import {
     UserRound,
     Zap,
     Eye,
-    Truck
+    Truck,
+    Hand
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import AuthModal from '../components/AuthModal'
