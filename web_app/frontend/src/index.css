@@ -1,52 +1,63 @@
 /* =============================================
    AURACARE — DESIGN SYSTEM & GLOBAL STYLES
-   Premium Inclusive Healthcare Platform
-   Purple & Teal Medical Theme
+   Bio-Luminescent Dark Medical AI Theme
    ============================================= */
 
-/* --- Google Fonts --- */
+/* --- Google Fonts — Professional Medical Typography --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 /* --- CSS Custom Properties (Design Tokens) --- */
 :root {
-  /* Primary Palette — Inclusive Purple */
-  --primary-50: #eef2ff;
-  --primary-100: #e0e7ff;
-  --primary-200: #c7d2fe;
-  --primary-300: #a5b4fc;
-  --primary-400: #818cf8;
-  --primary-500: #4F46E5;
-  --primary-600: #4338ca;
-  --primary-700: #3730a3;
-  --primary-800: #312e81;
-  --primary-900: #1e1b4b;
+  /* Primary — Bio-Luminescent Cyan */
+  --primary-50: #ecfeff;
+  --primary-100: #cffafe;
+  --primary-200: #a5f3fc;
+  --primary-300: #67e8f9;
+  --primary-400: #22d3ee;
+  --primary-500: #00F5D4;
+  --primary-600: #00d4b7;
+  --primary-700: #00b39b;
+  --primary-800: #008f7c;
+  --primary-900: #006b5d;
 
-  /* Accent — Medical Teal */
-  --accent-50: #f0fdfa;
-  --accent-100: #ccfbf1;
-  --accent-200: #99f6e4;
-  --accent-300: #5eead4;
-  --accent-400: #2dd4bf;
-  --accent-500: #0EA5A4;
-  --accent-600: #0d9488;
-  --accent-700: #0f766e;
+  /* Secondary — Electric Purple */
+  --secondary-50: #f5f3ff;
+  --secondary-100: #ede9fe;
+  --secondary-200: #ddd6fe;
+  --secondary-300: #c4b5fd;
+  --secondary-400: #a78bfa;
+  --secondary-500: #9B5DE5;
+  --secondary-600: #7c3aed;
+  --secondary-700: #6d28d9;
+  --secondary-800: #5b21b6;
+  --secondary-900: #4c1d95;
+
+  /* Accent — Signal Yellow */
+  --accent-50: #fefce8;
+  --accent-100: #fef9c3;
+  --accent-200: #fef08a;
+  --accent-300: #fde047;
+  --accent-400: #FEE440;
+  --accent-500: #eab308;
+  --accent-600: #ca8a04;
+  --accent-700: #a16207;
 
   /* Semantic Colors */
-  --success-50: #ecfdf5;
-  --success-400: #34d399;
-  --success-500: #10b981;
-  --success-600: #059669;
+  --success-50: #042f2e;
+  --success-400: #2dd4bf;
+  --success-500: #14b8a6;
+  --success-600: #0d9488;
 
-  --warning-50: #fffbeb;
-  --warning-400: #fbbf24;
-  --warning-500: #f59e0b;
+  --warning-50: #422006;
+  --warning-400: #fb923c;
+  --warning-500: #f97316;
 
-  --danger-50: #fef2f2;
+  --danger-50: #450a0a;
   --danger-400: #f87171;
   --danger-500: #ef4444;
   --danger-600: #dc2626;
 
-  /* Neutral Palette — Cool Slate */
+  /* Neutral — Deep Space */
   --neutral-50: #f8fafc;
   --neutral-100: #f1f5f9;
   --neutral-200: #e2e8f0;
@@ -54,37 +65,39 @@
   --neutral-400: #94a3b8;
   --neutral-500: #64748b;
   --neutral-600: #475569;
-  --neutral-700: #334155;
-  --neutral-800: #1e293b;
-  --neutral-900: #0f172a;
-  --neutral-950: #020617;
+  --neutral-700: #1e293b;
+  --neutral-800: #0f172a;
+  --neutral-900: #030712;
+  --neutral-950: #020408;
 
-  /* Background & Surface */
-  --bg-primary: #F8FAFC;
-  --bg-secondary: #f1f5f9;
-  --bg-surface: rgba(255, 255, 255, 0.92);
-  --bg-card: rgba(255, 255, 255, 0.88);
-  --bg-glass: rgba(79, 70, 229, 0.04);
-  --bg-glass-hover: rgba(79, 70, 229, 0.08);
+  /* Background & Surface — Dark Mode */
+  --bg-primary: #030712;
+  --bg-secondary: #0a0f1f;
+  --bg-surface: rgba(10, 15, 31, 0.92);
+  --bg-card: rgba(15, 23, 42, 0.85);
+  --bg-glass: rgba(0, 245, 212, 0.04);
+  --bg-glass-hover: rgba(0, 245, 212, 0.08);
+  --bg-elevated: #111827;
 
   /* Typography */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --text-inverse: #ffffff;
+  --text-primary: #ECFEFF;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #030712;
 
   /* Border & Effects */
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-light: rgba(0, 0, 0, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-light: rgba(255, 255, 255, 0.1);
   --border-focus: var(--primary-500);
-  --glow-primary: 0 0 20px rgba(79, 70, 229, 0.25);
-  --glow-accent: 0 0 20px rgba(14, 165, 164, 0.25);
+  --glow-primary: 0 0 24px rgba(0, 245, 212, 0.3);
+  --glow-secondary: 0 0 24px rgba(155, 93, 229, 0.3);
+  --glow-accent: 0 0 24px rgba(254, 228, 64, 0.25);
   --glow-danger: 0 0 20px rgba(239, 68, 68, 0.3);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
 
   /* Radius */
   --radius-sm: 6px;
@@ -111,6 +124,28 @@
   --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* ═══ COLOR BLIND FILTER MODES ═══ */
+/* Applied via CSS filters on the root element */
+.filter-protanopia {
+  filter: url('#protanopia-filter');
+}
+
+.filter-deuteranopia {
+  filter: url('#deuteranopia-filter');
+}
+
+.filter-tritanopia {
+  filter: url('#tritanopia-filter');
+}
+
+.filter-achromatopsia {
+  filter: grayscale(100%) contrast(1.1);
+}
+
+.filter-enhanced-contrast {
+  filter: contrast(1.4) saturate(1.3);
+}
+
 /* --- RESET & BASE --- */
 *,
 *::before,
@@ -134,7 +169,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Subtle purple/teal tinted background gradient */
+/* Bio-luminescent ambient glow background */
 body::before {
   content: '';
   position: fixed;
@@ -143,9 +178,9 @@ body::before {
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(79, 70, 229, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(14, 165, 164, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(129, 140, 248, 0.03) 0%, transparent 50%);
+    radial-gradient(ellipse at 15% 50%, rgba(0, 245, 212, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 20%, rgba(155, 93, 229, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 85%, rgba(254, 228, 64, 0.02) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
@@ -163,7 +198,7 @@ a {
 }
 
 a:hover {
-  color: var(--primary-600);
+  color: var(--primary-400);
 }
 
 /* --- SCROLLBAR --- */
@@ -177,33 +212,33 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--neutral-300);
+  background: var(--neutral-600);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--neutral-400);
+  background: var(--neutral-500);
 }
 
 /* --- ACCESSIBILITY MODES --- */
 .high-contrast {
-  --bg-primary: #ffffff !important;
-  --bg-secondary: #f5f5f5 !important;
-  --bg-card: rgba(255, 255, 255, 1) !important;
-  --text-primary: #000000 !important;
-  --text-secondary: #333333 !important;
-  --border-subtle: rgba(0, 0, 0, 0.3) !important;
-  --border-light: rgba(0, 0, 0, 0.5) !important;
+  --bg-primary: #000000 !important;
+  --bg-secondary: #0a0a0a !important;
+  --bg-card: rgba(20, 20, 20, 1) !important;
+  --text-primary: #ffffff !important;
+  --text-secondary: #cccccc !important;
+  --border-subtle: rgba(255, 255, 255, 0.4) !important;
+  --border-light: rgba(255, 255, 255, 0.6) !important;
 }
 
 .high-contrast .card,
 .high-contrast .glass-card {
-  border: 2px solid #000000 !important;
-  background: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  background: #111111 !important;
 }
 
 .high-contrast button {
-  border: 2px solid #000000 !important;
+  border: 2px solid #ffffff !important;
 }
 
 .font-normal {
@@ -221,7 +256,7 @@ a:hover {
 /* --- SELECTION --- */
 ::selection {
   background: var(--primary-500);
-  color: white;
+  color: var(--text-inverse);
 }
 
 /* --- ANIMATIONS --- */
@@ -289,11 +324,11 @@ a:hover {
 
   0%,
   100% {
-    box-shadow: 0 0 5px rgba(79, 70, 229, 0.2);
+    box-shadow: 0 0 5px rgba(0, 245, 212, 0.2);
   }
 
   50% {
-    box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+    box-shadow: 0 0 20px rgba(0, 245, 212, 0.5);
   }
 }
 
@@ -340,6 +375,18 @@ a:hover {
   100% {
     transform: scale(2.4);
     opacity: 0;
+  }
+}
+
+@keyframes bioGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(0, 245, 212, 0.2), 0 0 32px rgba(155, 93, 229, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 16px rgba(0, 245, 212, 0.4), 0 0 48px rgba(155, 93, 229, 0.2);
   }
 }
 

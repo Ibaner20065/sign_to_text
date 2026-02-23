@@ -1,18 +1,17 @@
 /* =============================================
-   NAVBAR — Dual-mode (Public + Dashboard)
-   Purple & Teal Theme
+   NAVBAR — Bio-Luminescent Dark Theme
    ============================================= */
 
 .navbar {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(3, 7, 18, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: sticky;
   top: 0;
   z-index: 100;
   transition: all var(--transition-base);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
 }
 
 .navbar-container {
@@ -51,7 +50,7 @@
 }
 
 .brand-text {
-  background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+  background: linear-gradient(135deg, #00F5D4, #9B5DE5);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -81,13 +80,13 @@
 }
 
 .navbar-link:hover {
-  color: var(--primary-600);
-  background: var(--primary-50);
+  color: #00F5D4;
+  background: rgba(0, 245, 212, 0.06);
 }
 
 .navbar-link.active {
-  color: var(--primary-600);
-  background: var(--primary-50);
+  color: #00F5D4;
+  background: rgba(0, 245, 212, 0.08);
   font-weight: 600;
 }
 
@@ -98,7 +97,7 @@
   transform: translateX(-50%);
   width: 24px;
   height: 2px;
-  background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+  background: linear-gradient(90deg, #00F5D4, #9B5DE5);
   border-radius: var(--radius-full);
   animation: scaleIn 0.3s ease;
 }
@@ -137,34 +136,33 @@
 }
 
 .navbar-login:hover {
-  color: var(--primary-600);
-  background: var(--primary-50);
+  color: #00F5D4;
+  background: rgba(0, 245, 212, 0.06);
 }
 
 .navbar-signup {
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  color: white;
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+  background: linear-gradient(135deg, #00F5D4, #00d4b7);
+  color: #030712;
+  box-shadow: 0 2px 12px rgba(0, 245, 212, 0.25);
 }
 
 .navbar-signup:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 245, 212, 0.35);
 }
 
-/* --- Dashboard link (for logged-in users on public pages) --- */
 .navbar-dashboard-link {
   padding: var(--space-2) var(--space-4);
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--primary-600);
+  color: #00F5D4;
   text-decoration: none;
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
 }
 
 .navbar-dashboard-link:hover {
-  background: var(--primary-50);
+  background: rgba(0, 245, 212, 0.06);
 }
 
 /* --- User Badge --- */
@@ -178,13 +176,13 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+  background: linear-gradient(135deg, #00F5D4, #9B5DE5);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
   font-weight: 700;
-  color: white;
+  color: #030712;
   text-transform: uppercase;
 }
 
@@ -213,7 +211,7 @@
 }
 
 .navbar-logout:hover {
-  color: var(--danger-500);
+  color: var(--danger-400);
   background: var(--danger-50);
 }
 
@@ -266,8 +264,8 @@
     top: 64px;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(20px);
+    background: rgba(3, 7, 18, 0.97);
+    backdrop-filter: blur(24px);
     flex-direction: column;
     padding: var(--space-4);
     gap: var(--space-2);
@@ -276,17 +274,13 @@
     transition: all var(--transition-base);
     pointer-events: none;
     border-bottom: 1px solid var(--border-subtle);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   }
 
   .navbar-links.mobile-open {
     transform: translateY(0);
     opacity: 1;
     pointer-events: all;
-  }
-
-  .navbar-label {
-    display: inline;
   }
 
   .user-name {

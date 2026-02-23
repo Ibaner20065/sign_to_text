@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import AuthModal from './AuthModal'
+import ColorBlindFilter from './ColorBlindFilter'
 import './Navbar.css'
 
 const Navbar = ({ variant = 'auto' }) => {
@@ -113,6 +114,7 @@ const Navbar = ({ variant = 'auto' }) => {
 
           {/* ─── Auth / User Area ─── */}
           <div className="navbar-auth" id="navbar-auth">
+            <ColorBlindFilter />
             {isAuthenticated ? (
               <>
                 {!showDashboard && (

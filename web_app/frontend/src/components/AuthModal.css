@@ -1,13 +1,13 @@
 /* =============================================
-   AUTH MODAL — Glassmorphism Overlay
+   AUTH MODAL — Bio-Luminescent Dark Theme
    ============================================= */
 
 .auth-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.5);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(3, 7, 18, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,15 +19,15 @@
 .auth-modal {
     width: 100%;
     max-width: 420px;
-    background: white;
+    background: #0a0f1f;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 20px;
     padding: 36px;
     position: relative;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(0, 245, 212, 0.05);
     animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ─── Close Button ─── */
 .auth-modal-close {
     position: absolute;
     top: 16px;
@@ -35,7 +35,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #94a3b8;
+    color: #64748b;
     padding: 6px;
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -45,11 +45,10 @@
 }
 
 .auth-modal-close:hover {
-    background: #f1f5f9;
-    color: #0F172A;
+    background: rgba(255, 255, 255, 0.06);
+    color: #ECFEFF;
 }
 
-/* ─── Brand ─── */
 .auth-modal-brand {
     display: flex;
     align-items: center;
@@ -65,16 +64,16 @@
 .auth-modal-brand-name {
     font-size: 1.4rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #4F46E5, #0EA5A4);
+    background: linear-gradient(135deg, #00F5D4, #9B5DE5);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-/* ─── Tabs ─── */
 .auth-modal-tabs {
     display: flex;
-    background: #f1f5f9;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 12px;
     padding: 4px;
     margin-bottom: 28px;
@@ -88,23 +87,22 @@
     font-family: inherit;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #94a3b8;
+    color: #64748b;
     cursor: pointer;
     border-radius: 9px;
     transition: all 0.25s ease;
 }
 
 .auth-modal-tab.active {
-    background: white;
-    color: #4F46E5;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    background: rgba(0, 245, 212, 0.1);
+    color: #00F5D4;
+    box-shadow: 0 0 12px rgba(0, 245, 212, 0.1);
 }
 
 .auth-modal-tab:hover:not(.active) {
-    color: #64748b;
+    color: #94a3b8;
 }
 
-/* ─── Form Fields ─── */
 .auth-modal-form {
     display: flex;
     flex-direction: column;
@@ -118,7 +116,7 @@
     display: block;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #475569;
+    color: #94a3b8;
     margin-bottom: 6px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -127,30 +125,29 @@
 .auth-modal-field input {
     width: 100%;
     padding: 12px 16px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 10px;
     font-family: inherit;
     font-size: 0.95rem;
-    color: #0F172A;
+    color: #ECFEFF;
     transition: all 0.2s ease;
     outline: none;
-    background: #f8fafc;
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .auth-modal-field input::placeholder {
-    color: #94a3b8;
+    color: #475569;
 }
 
 .auth-modal-field input:focus {
-    border-color: #4F46E5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    background: white;
+    border-color: #00F5D4;
+    box-shadow: 0 0 0 3px rgba(0, 245, 212, 0.1);
+    background: rgba(0, 245, 212, 0.03);
 }
 
-/* ─── Error ─── */
 .auth-modal-error {
-    background: #fef2f2;
-    color: #dc2626;
+    background: rgba(239, 68, 68, 0.08);
+    color: #f87171;
     padding: 10px 16px;
     border-radius: 10px;
     font-size: 0.85rem;
@@ -159,26 +156,25 @@
     animation: fadeIn 0.2s ease;
 }
 
-/* ─── Submit Button ─── */
 .auth-modal-submit {
     width: 100%;
     padding: 14px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(135deg, #4F46E5, #4338ca);
-    color: white;
+    background: linear-gradient(135deg, #00F5D4, #00d4b7);
+    color: #030712;
     font-family: inherit;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.25);
+    box-shadow: 0 4px 24px rgba(0, 245, 212, 0.25);
     margin-top: 4px;
 }
 
 .auth-modal-submit:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 8px 30px rgba(79, 70, 229, 0.35);
+    box-shadow: 0 8px 32px rgba(0, 245, 212, 0.35);
 }
 
 .auth-modal-submit:active:not(:disabled) {
@@ -201,8 +197,8 @@
 .auth-spinner {
     width: 18px;
     height: 18px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top-color: white;
+    border: 2px solid rgba(3, 7, 18, 0.3);
+    border-top-color: #030712;
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
 }
@@ -213,7 +209,6 @@
     }
 }
 
-/* ─── Switch Link ─── */
 .auth-modal-switch {
     text-align: center;
     font-size: 0.85rem;
@@ -224,7 +219,7 @@
 .auth-modal-switch button {
     background: none;
     border: none;
-    color: #4F46E5;
+    color: #00F5D4;
     font-weight: 600;
     cursor: pointer;
     font-family: inherit;
@@ -236,14 +231,9 @@
     text-decoration: underline;
 }
 
-/* ─── Responsive ─── */
 @media (max-width: 480px) {
     .auth-modal {
         padding: 28px 24px;
         border-radius: 16px;
-    }
-
-    .auth-modal-brand-name {
-        font-size: 1.2rem;
     }
 }
