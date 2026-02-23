@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Communication from './pages/Communication'
@@ -20,18 +21,29 @@ function App() {
       <Router>
         <div className="app">
           <Routes>
+            {/* Public Routes */}
+            <Route
+              path="/"
+              element={
+                <>
+                  <Navbar variant="public" />
+                  <Home />
+                </>
+              }
+            />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/emergency" element={<Emergency />} />
+
+            {/* Protected Dashboard Routes */}
             <Route
               path="/*"
               element={
                 <ProtectedRoute>
                   <div>
-                    <Navbar />
+                    <Navbar variant="dashboard" />
                     <div className="content">
                       <Routes>
-                        <Route path="/" element={<Navigate to="/communication" replace />} />
                         <Route path="/communication" element={<Communication />} />
                         <Route path="/ambulance" element={<AmbulanceTracker />} />
                         <Route path="/scanner" element={<DocumentScanner />} />
@@ -52,4 +64,3 @@ function App() {
 }
 
 export default App
-

@@ -1,0 +1,249 @@
+/* =============================================
+   AUTH MODAL — Glassmorphism Overlay
+   ============================================= */
+
+.auth-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+    padding: 20px;
+}
+
+.auth-modal {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 20px;
+    padding: 36px;
+    position: relative;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.15);
+    animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Close Button ─── */
+.auth-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-modal-close:hover {
+    background: #f1f5f9;
+    color: #0F172A;
+}
+
+/* ─── Brand ─── */
+.auth-modal-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.auth-modal-brand-icon {
+    font-size: 1.5rem;
+}
+
+.auth-modal-brand-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #4F46E5, #0EA5A4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ─── Tabs ─── */
+.auth-modal-tabs {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 28px;
+}
+
+.auth-modal-tab {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    border-radius: 9px;
+    transition: all 0.25s ease;
+}
+
+.auth-modal-tab.active {
+    background: white;
+    color: #4F46E5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.auth-modal-tab:hover:not(.active) {
+    color: #64748b;
+}
+
+/* ─── Form Fields ─── */
+.auth-modal-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-modal-field {
+    margin-bottom: 18px;
+}
+
+.auth-modal-field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.auth-modal-field input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #0F172A;
+    transition: all 0.2s ease;
+    outline: none;
+    background: #f8fafc;
+}
+
+.auth-modal-field input::placeholder {
+    color: #94a3b8;
+}
+
+.auth-modal-field input:focus {
+    border-color: #4F46E5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    background: white;
+}
+
+/* ─── Error ─── */
+.auth-modal-error {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    margin-bottom: 16px;
+    animation: fadeIn 0.2s ease;
+}
+
+/* ─── Submit Button ─── */
+.auth-modal-submit {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #4F46E5, #4338ca);
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.25);
+    margin-top: 4px;
+}
+
+.auth-modal-submit:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(79, 70, 229, 0.35);
+}
+
+.auth-modal-submit:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.auth-modal-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.auth-modal-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.auth-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─── Switch Link ─── */
+.auth-modal-switch {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: 20px;
+}
+
+.auth-modal-switch button {
+    background: none;
+    border: none;
+    color: #4F46E5;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+}
+
+.auth-modal-switch button:hover {
+    text-decoration: underline;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 480px) {
+    .auth-modal {
+        padding: 28px 24px;
+        border-radius: 16px;
+    }
+
+    .auth-modal-brand-name {
+        font-size: 1.2rem;
+    }
+}

@@ -1,6 +1,6 @@
 /* =============================================
    APP — Layout, Cards, Buttons, Inputs, Utilities
-   Red & White Healthcare Theme
+   Purple & Teal Inclusive Healthcare Theme
    ============================================= */
 
 .app {
@@ -119,12 +119,24 @@
 .button-primary {
   background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
   color: white;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
 }
 
 .button-primary:hover:not(:disabled) {
   background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
   box-shadow: var(--glow-primary);
+  transform: translateY(-1px);
+}
+
+.button-accent {
+  background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+  color: white;
+  box-shadow: 0 2px 8px rgba(14, 165, 164, 0.25);
+}
+
+.button-accent:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--accent-600), var(--accent-700));
+  box-shadow: var(--glow-accent);
   transform: translateY(-1px);
 }
 
@@ -135,7 +147,7 @@
 }
 
 .button-danger:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+  background: linear-gradient(135deg, var(--danger-600), #b91c1c);
   box-shadow: var(--glow-danger);
   transform: translateY(-1px);
 }
@@ -189,7 +201,7 @@
 
 .input:focus {
   border-color: var(--primary-400);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
   background: white;
 }
 
@@ -236,7 +248,7 @@
   padding: var(--space-3) var(--space-4);
   background: var(--primary-50);
   border-radius: var(--radius-md);
-  border: 1px solid rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(79, 70, 229, 0.15);
   margin-bottom: var(--space-4);
   font-size: 0.9rem;
 }
@@ -305,7 +317,13 @@
 .badge-primary {
   background: var(--primary-50);
   color: var(--primary-600);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+}
+
+.badge-accent {
+  background: var(--accent-50);
+  color: var(--accent-700);
+  border: 1px solid rgba(14, 165, 164, 0.2);
 }
 
 /* --- UTILITY CLASSES --- */
