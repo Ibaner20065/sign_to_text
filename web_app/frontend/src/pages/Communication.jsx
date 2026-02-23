@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Hands } from '@mediapipe/hands'
 import { Camera } from '@mediapipe/camera_utils'
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils'
-import { Hand, Mic, Volume2, Trash2, Clipboard, BookOpen, X, CheckCircle, Info, AlertTriangle, AlertOctagon, MicOff, Square, MessageSquare, ThumbsUp, Fist, MousePointer2, User, HandMetal } from 'lucide-react'
+import { Hand, Mic, Volume2, Trash2, Clipboard, BookOpen, X, CheckCircle, Info, AlertTriangle, AlertOctagon, MicOff, Square, MessageSquare, ThumbsUp, MousePointer2, User, HandMetal } from 'lucide-react'
 
 const HAND_CONNECTIONS = [
   [0, 1], [1, 2], [2, 3], [3, 4],
@@ -483,7 +483,7 @@ const Communication = () => {
   const gestureGuide = [
     { gesture: 'hello', icon: <Hand size={24} />, desc: 'Open palm, all fingers spread' },
     { gesture: 'yes', icon: <ThumbsUp size={24} />, desc: 'Thumbs up, fist closed' },
-    { gesture: 'no', icon: <Fist size={24} />, desc: 'Closed fist, no fingers out' },
+    { gesture: 'no', icon: <Hand size={24} />, desc: 'Closed fist, no fingers out' },
     { gesture: 'I', icon: <MessageSquare size={24} />, desc: 'Only pinky finger extended' },
     { gesture: 'you', icon: <MousePointer2 size={24} />, desc: 'Only index finger pointing' },
     { gesture: 'ME', icon: <User size={24} />, desc: 'Index + thumb out (point at self)' },
