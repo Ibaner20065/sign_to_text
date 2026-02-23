@@ -1,5 +1,6 @@
 /* =============================================
    AUTH — Premium Login / Register Screens
+   Red & White Healthcare Theme
    ============================================= */
 
 .auth-container {
@@ -10,6 +11,7 @@
   padding: var(--space-6);
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 50%, #fff1f2 100%);
 }
 
 /* Animated background orbs */
@@ -18,7 +20,7 @@
   position: absolute;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(13, 134, 228, 0.15), transparent 70%);
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.08), transparent 70%);
   border-radius: 50%;
   top: -100px;
   right: -100px;
@@ -30,7 +32,7 @@
   position: absolute;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(20, 184, 166, 0.1), transparent 70%);
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.06), transparent 70%);
   border-radius: 50%;
   bottom: -100px;
   left: -100px;
@@ -38,13 +40,13 @@
 }
 
 .auth-card {
-  background: var(--bg-card);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   padding: var(--space-10);
   border-radius: var(--radius-xl);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-xl);
+  border: 1px solid rgba(239, 68, 68, 0.1);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(239, 68, 68, 0.05);
   width: 100%;
   max-width: 440px;
   position: relative;
@@ -67,7 +69,7 @@
 .auth-brand-name {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--primary-300), var(--accent-400));
+  background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -97,6 +99,14 @@
 .auth-card .input {
   padding: var(--space-3) var(--space-4);
   font-size: 1rem;
+  background: white;
+  border: 1px solid var(--neutral-200);
+  color: var(--text-primary);
+}
+
+.auth-card .input:focus {
+  border-color: var(--primary-400);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 .auth-card .button-primary {
@@ -121,7 +131,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border-subtle);
+  background: var(--neutral-200);
 }
 
 .auth-link {
@@ -132,14 +142,14 @@
 }
 
 .auth-link a {
-  color: var(--primary-400);
+  color: var(--primary-500);
   text-decoration: none;
   font-weight: 500;
   transition: color var(--transition-fast);
 }
 
 .auth-link a:hover {
-  color: var(--primary-300);
+  color: var(--primary-600);
   text-decoration: underline;
 }
 

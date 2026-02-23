@@ -1,9 +1,9 @@
 /* =============================================
-   NAVBAR — Premium Glass Navigation
+   NAVBAR — Premium White Navigation with Red Accents
    ============================================= */
 
 .navbar {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-subtle);
@@ -11,6 +11,7 @@
   top: 0;
   z-index: 100;
   transition: all var(--transition-base);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .navbar-container {
@@ -47,7 +48,7 @@
 }
 
 .brand-text {
-  background: linear-gradient(135deg, var(--primary-300), var(--accent-400));
+  background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -76,13 +77,14 @@
 }
 
 .navbar-link:hover {
-  color: var(--text-primary);
-  background: var(--bg-glass);
+  color: var(--primary-600);
+  background: var(--primary-50);
 }
 
 .navbar-link.active {
-  color: var(--primary-300);
-  background: rgba(13, 134, 228, 0.1);
+  color: var(--primary-600);
+  background: var(--primary-50);
+  font-weight: 600;
 }
 
 .active-indicator {
@@ -92,7 +94,7 @@
   transform: translateX(-50%);
   width: 24px;
   height: 2px;
-  background: linear-gradient(90deg, var(--primary-400), var(--accent-400));
+  background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
   border-radius: var(--radius-full);
   animation: scaleIn 0.3s ease;
 }
@@ -185,7 +187,7 @@
     top: 64px;
     left: 0;
     right: 0;
-    background: rgba(15, 23, 42, 0.98);
+    background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(20px);
     flex-direction: column;
     padding: var(--space-4);
@@ -195,6 +197,7 @@
     transition: all var(--transition-base);
     pointer-events: none;
     border-bottom: 1px solid var(--border-subtle);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   .navbar-links.mobile-open {

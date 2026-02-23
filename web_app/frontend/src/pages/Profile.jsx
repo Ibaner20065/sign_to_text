@@ -12,7 +12,7 @@ const Profile = () => {
     ttsSpeed: 1.0,
   })
   const [profilePic, setProfilePic] = useState(null)
-  const [oldPassword, setOldPassword] = useState('')
+
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState('')
@@ -86,11 +86,11 @@ const Profile = () => {
       return
     }
 
-    const result = await changePassword(oldPassword, newPassword)
+    const result = await changePassword('', newPassword)
     if (result.success) {
       setMessage('Password changed successfully! 🎉')
       setMessageType('success')
-      setOldPassword('')
+
       setNewPassword('')
       setConfirmPassword('')
     } else {
@@ -214,18 +214,6 @@ const Profile = () => {
         <div className="card">
           <h2>🔒 Change Password</h2>
           <form onSubmit={handlePasswordChange} className="password-form" id="password-form">
-            <div className="form-group">
-              <label className="label" htmlFor="current-password">Current Password</label>
-              <input
-                id="current-password"
-                type="password"
-                className="input"
-                placeholder="Enter current password"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                required
-              />
-            </div>
             <div className="form-group">
               <label className="label" htmlFor="new-password">New Password</label>
               <input

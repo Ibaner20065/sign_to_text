@@ -36,7 +36,7 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-brand">
-          <span className="auth-brand-icon">💙</span>
+          <span className="auth-brand-icon">❤️</span>
           <span className="auth-brand-name">AuraCare</span>
         </div>
         <h1>Create Account</h1>

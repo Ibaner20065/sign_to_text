@@ -35,15 +35,15 @@
 
 .specialty-button:hover {
   border-color: var(--primary-400);
-  color: var(--primary-300);
-  background: rgba(13, 134, 228, 0.05);
+  color: var(--primary-500);
+  background: rgba(239, 68, 68, 0.05);
 }
 
 .specialty-button.active {
   background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
   color: white;
   border-color: transparent;
-  box-shadow: 0 2px 8px rgba(13, 134, 228, 0.3);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
 }
 
 /* --- Map --- */
@@ -120,7 +120,7 @@
 
 .hospital-card h4 {
   margin: 0 0 var(--space-3) 0;
-  color: var(--primary-300);
+  color: var(--primary-600);
   font-size: 1rem;
   font-weight: 600;
 }
@@ -183,7 +183,7 @@
 /* --- Popup Styles --- */
 .hospital-popup h3 {
   margin: 0 0 8px 0;
-  color: #2563eb;
+  color: var(--primary-600);
   font-size: 1rem;
 }
 

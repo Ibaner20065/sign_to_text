@@ -31,7 +31,7 @@
 
 .upload-dropzone:hover {
   border-color: var(--primary-400);
-  background: rgba(13, 134, 228, 0.05);
+  background: rgba(239, 68, 68, 0.05);
 }
 
 .upload-dropzone.has-file {
@@ -74,7 +74,7 @@
   font-weight: 500;
   font-size: 0.9rem;
   transition: all var(--transition-base);
-  box-shadow: 0 2px 8px rgba(13, 134, 228, 0.3);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
 }
 
 .file-label:hover {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
-import { useAuth } from '../context/AuthContext'
+
 import './AmbulanceTracker.css'
 
 // Fix for default marker icon
@@ -43,7 +43,7 @@ const AmbulanceTracker = () => {
   const [ambulances, setAmbulances] = useState([])
   const [showSOSModal, setShowSOSModal] = useState(false)
   const [sosSent, setSosSent] = useState(false)
-  const { token } = useAuth()
+
   const intervalRef = useRef(null)
 
   useEffect(() => {
@@ -77,25 +77,41 @@ const AmbulanceTracker = () => {
     }
   }, [userLocation])
 
-  const fetchAmbulances = async () => {
-    try {
-      const response = await fetch('/api/ambulance-status', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await response.json()
-
-      if (userLocation) {
-        const updatedAmbulances = data.ambulances.map((amb) => ({
-          ...amb,
-          lat: userLocation[0] + amb.lat_offset,
-          lng: userLocation[1] + amb.lng_offset,
-        }))
-        setAmbulances(updatedAmbulances)
+  const fetchAmbulances = () => {
+    const ambulanceData = [
+      {
+        id: 1,
+        lat_offset: 0.01 + (Math.random() - 0.5) * 0.004,
+        lng_offset: 0.01 + (Math.random() - 0.5) * 0.004,
+        status: "Moving",
+        eta: "5 mins",
+        type: "ALS"
+      },
+      {
+        id: 2,
+        lat_offset: -0.01 + (Math.random() - 0.5) * 0.004,
+        lng_offset: 0.02 + (Math.random() - 0.5) * 0.004,
+        status: "Stationary",
+        eta: "12 mins",
+        type: "BLS"
+      },
+      {
+        id: 3,
+        lat_offset: 0.02 + (Math.random() - 0.5) * 0.004,
+        lng_offset: -0.01 + (Math.random() - 0.5) * 0.004,
+        status: "Moving",
+        eta: "8 mins",
+        type: "Neonatal"
       }
-    } catch (error) {
-      console.error('Error fetching ambulances:', error)
+    ]
+
+    if (userLocation) {
+      const updatedAmbulances = ambulanceData.map((amb) => ({
+        ...amb,
+        lat: userLocation[0] + amb.lat_offset,
+        lng: userLocation[1] + amb.lng_offset,
+      }))
+      setAmbulances(updatedAmbulances)
     }
   }
 

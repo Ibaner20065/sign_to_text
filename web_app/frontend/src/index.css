@@ -1,26 +1,27 @@
 /* =============================================
    AURACARE — DESIGN SYSTEM & GLOBAL STYLES
    Premium Healthcare Platform CSS Foundation
+   Red & White Theme
    ============================================= */
 
 /* --- CSS Custom Properties (Design Tokens) --- */
 :root {
-  /* Primary Palette — Deep Medical Blue to Teal */
-  --primary-50: #e8f4fd;
-  --primary-100: #b9def8;
-  --primary-200: #8ac8f3;
-  --primary-300: #5bb2ee;
-  --primary-400: #2c9ce9;
-  --primary-500: #0d86e4;
-  --primary-600: #0a6bb6;
-  --primary-700: #085088;
-  --primary-800: #05355a;
-  --primary-900: #031a2d;
+  /* Primary Palette — Healthcare Red */
+  --primary-50: #fef2f2;
+  --primary-100: #fee2e2;
+  --primary-200: #fecaca;
+  --primary-300: #fca5a5;
+  --primary-400: #f87171;
+  --primary-500: #ef4444;
+  --primary-600: #dc2626;
+  --primary-700: #b91c1c;
+  --primary-800: #991b1b;
+  --primary-900: #7f1d1d;
 
-  /* Accent — Vibrant Teal */
-  --accent-400: #2dd4bf;
-  --accent-500: #14b8a6;
-  --accent-600: #0d9488;
+  /* Accent — Warm Rose */
+  --accent-400: #fb7185;
+  --accent-500: #f43f5e;
+  --accent-600: #e11d48;
 
   /* Semantic Colors */
   --success-50: #ecfdf5;
@@ -37,45 +38,45 @@
   --danger-500: #ef4444;
   --danger-600: #dc2626;
 
-  /* Neutral Palette */
-  --neutral-50: #f8fafc;
-  --neutral-100: #f1f5f9;
-  --neutral-200: #e2e8f0;
-  --neutral-300: #cbd5e1;
-  --neutral-400: #94a3b8;
-  --neutral-500: #64748b;
-  --neutral-600: #475569;
-  --neutral-700: #334155;
-  --neutral-800: #1e293b;
-  --neutral-900: #0f172a;
-  --neutral-950: #020617;
+  /* Neutral Palette — Warm Whites & Grays */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #a3a3a3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
 
-  /* Background & Surface */
-  --bg-primary: #0a0e1a;
-  --bg-secondary: #111827;
-  --bg-surface: rgba(17, 24, 39, 0.7);
-  --bg-card: rgba(30, 41, 59, 0.5);
-  --bg-glass: rgba(255, 255, 255, 0.05);
-  --bg-glass-hover: rgba(255, 255, 255, 0.08);
+  /* Background & Surface — Light/White Theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --bg-surface: rgba(255, 255, 255, 0.9);
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-glass: rgba(239, 68, 68, 0.04);
+  --bg-glass-hover: rgba(239, 68, 68, 0.08);
 
   /* Typography */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-inverse: #0f172a;
+  --text-primary: #171717;
+  --text-secondary: #525252;
+  --text-muted: #a3a3a3;
+  --text-inverse: #ffffff;
 
   /* Border & Effects */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-light: rgba(255, 255, 255, 0.1);
-  --border-focus: var(--primary-400);
-  --glow-primary: 0 0 20px rgba(13, 134, 228, 0.3);
-  --glow-accent: 0 0 20px rgba(20, 184, 166, 0.3);
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-light: rgba(0, 0, 0, 0.1);
+  --border-focus: var(--primary-500);
+  --glow-primary: 0 0 20px rgba(239, 68, 68, 0.2);
+  --glow-accent: 0 0 20px rgba(244, 63, 94, 0.2);
   --glow-danger: 0 0 20px rgba(239, 68, 68, 0.3);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
 
   /* Radius */
   --radius-sm: 6px;
@@ -125,7 +126,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Animated gradient background */
+/* Subtle red-tinted background gradient */
 body::before {
   content: '';
   position: fixed;
@@ -134,9 +135,9 @@ body::before {
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(13, 134, 228, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(20, 184, 166, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+    radial-gradient(ellipse at 20% 50%, rgba(239, 68, 68, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(244, 63, 94, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(251, 113, 133, 0.03) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
@@ -148,13 +149,13 @@ body::before {
 }
 
 a {
-  color: var(--primary-400);
+  color: var(--primary-500);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--primary-300);
+  color: var(--primary-600);
 }
 
 /* --- SCROLLBAR --- */
@@ -168,34 +169,34 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--neutral-600);
+  background: var(--neutral-300);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--neutral-500);
+  background: var(--neutral-400);
 }
 
 /* --- ACCESSIBILITY MODES --- */
 /* High Contrast Mode */
 .high-contrast {
-  --bg-primary: #000000 !important;
-  --bg-secondary: #111111 !important;
-  --bg-card: rgba(0, 0, 0, 0.9) !important;
-  --text-primary: #ffffff !important;
-  --text-secondary: #e0e0e0 !important;
-  --border-subtle: rgba(255, 255, 255, 0.3) !important;
-  --border-light: rgba(255, 255, 255, 0.5) !important;
+  --bg-primary: #ffffff !important;
+  --bg-secondary: #f5f5f5 !important;
+  --bg-card: rgba(255, 255, 255, 1) !important;
+  --text-primary: #000000 !important;
+  --text-secondary: #333333 !important;
+  --border-subtle: rgba(0, 0, 0, 0.3) !important;
+  --border-light: rgba(0, 0, 0, 0.5) !important;
 }
 
 .high-contrast .card,
 .high-contrast .glass-card {
-  border: 2px solid #ffffff !important;
-  background: #000000 !important;
+  border: 2px solid #000000 !important;
+  background: #ffffff !important;
 }
 
 .high-contrast button {
-  border: 2px solid #ffffff !important;
+  border: 2px solid #000000 !important;
 }
 
 /* Font Size Scaling */
@@ -219,53 +220,121 @@ a:hover {
 
 /* --- ANIMATIONS --- */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-30px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(30px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(13, 134, 228, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(13, 134, 228, 0.6); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(239, 68, 68, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes ripple {
-  0% { transform: scale(0.8); opacity: 1; }
-  100% { transform: scale(2.4); opacity: 0; }
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }
 
 .animate-fade-in {

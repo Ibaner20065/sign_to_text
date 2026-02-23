@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { useAuth } from '../context/AuthContext'
+
 import './DocumentScanner.css'
 
 const DocumentScanner = () => {
@@ -8,7 +8,6 @@ const DocumentScanner = () => {
   const [scanResult, setScanResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const fileInputRef = useRef(null)
-  const { token } = useAuth()
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0]
@@ -52,26 +51,38 @@ const DocumentScanner = () => {
     if (!file) return
 
     setLoading(true)
-    const formData = new FormData()
-    formData.append('file', file)
 
-    try {
-      const response = await fetch('/api/scan-document', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      })
+    // Simulate scanning delay
+    await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      const data = await response.json()
-      setScanResult(data)
-    } catch (error) {
-      console.error('Scan error:', error)
-      alert('Error scanning document. Please try again.')
-    } finally {
-      setLoading(false)
-    }
+    // Mock OCR text (since backend OCR isn't available)
+    const mockText = "Mock Report: Total Amount 50000. Admin Fee 5000. Drug: XyzFakeDrug. Surcharge applied. Patient: John Doe. Date: 2026-02-23."
+
+    // Scam detection (same logic as the backend)
+    const scamKeywords = [
+      "admin fee", "surcharge", "processing fee", "inflated",
+      "XyzFakeDrug", "hidden charge", "service tax", "convenience fee",
+      "duplicate", "overcharge"
+    ]
+    const flaggedItems = scamKeywords.filter((word) =>
+      mockText.toLowerCase().includes(word.toLowerCase())
+    )
+
+    // Check for high amounts
+    const amounts = mockText.match(/\b\d{5,}\b/g) || []
+    const highAmounts = amounts
+      .filter((amt) => parseInt(amt) > 10000)
+      .map((amt) => `High amount: ₹${amt}`)
+
+    const allFlagged = [...flaggedItems, ...highAmounts]
+
+    setScanResult({
+      text: mockText,
+      flagged: allFlagged,
+      is_suspicious: allFlagged.length > 0,
+    })
+
+    setLoading(false)
   }
 
   const highlightText = (text, flaggedItems) => {

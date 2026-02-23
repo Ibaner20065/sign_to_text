@@ -10,6 +10,7 @@ import AmbulanceTracker from './pages/AmbulanceTracker'
 import DocumentScanner from './pages/DocumentScanner'
 import HospitalFinder from './pages/HospitalFinder'
 import Profile from './pages/Profile'
+import Emergency from './pages/Emergency'
 import './App.css'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/emergency" element={<Emergency />} />
             <Route
               path="/*"
               element={

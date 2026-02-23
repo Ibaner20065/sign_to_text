@@ -11,7 +11,6 @@ const HAND_CONNECTIONS = [
   [13, 17], [17, 18], [18, 19], [19, 20],
   [0, 17]
 ]
-import { useAuth } from '../context/AuthContext'
 import './Communication.css'
 
 const Communication = () => {
@@ -29,7 +28,6 @@ const Communication = () => {
   const predictionBufferRef = useRef([])
   const lastWordRef = useRef(null)
   const recognitionRef = useRef(null)
-  const { token } = useAuth()
 
   const PREDICTION_WINDOW = 12
   const CONFIDENCE_THRESHOLD = 0.6
@@ -126,17 +124,12 @@ const Communication = () => {
 
       try {
         const features = extractHandFeatures(handLandmarks)
-        const response = await fetch('/api/predict', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ landmarks: features }),
-        })
 
-        const data = await response.json()
-        const prediction = data.prediction || ''
+        // Mock prediction (no backend needed)
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        const index = Math.floor(features[0] * 26) % 26
+        const prediction = letters[index] || 'A'
+        const confidence = 0.85 + Math.random() * 0.1
 
         if (prediction) {
           setCurrentWord(prediction)

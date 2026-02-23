@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
-import { useAuth } from '../context/AuthContext'
+
 import './HospitalFinder.css'
 
 // Fix for default marker icon
@@ -61,7 +61,7 @@ const HospitalFinder = () => {
   const [hospitals, setHospitals] = useState([])
   const [filteredHospitals, setFilteredHospitals] = useState([])
   const [selectedSpecialty, setSelectedSpecialty] = useState('All')
-  const { token } = useAuth()
+
 
   const specialties = ['All', 'General', 'Cardiology', 'Neurology', 'Pediatrics', 'Emergency']
 
@@ -98,18 +98,25 @@ const HospitalFinder = () => {
     }
   }, [selectedSpecialty, hospitals, userLocation])
 
-  const fetchHospitals = async () => {
-    try {
-      const response = await fetch('/api/hospitals', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await response.json()
-      setHospitals(data.hospitals)
-    } catch (error) {
-      console.error('Error fetching hospitals:', error)
-    }
+  const fetchHospitals = () => {
+    const hospitalData = [
+      { id: 101, name: "City General Hospital", lat_offset: 0.005, lng_offset: 0.005, specialty: "General", phone: "+91-11-2345-6789" },
+      { id: 102, name: "Heart Care Center", lat_offset: -0.008, lng_offset: 0.01, specialty: "Cardiology", phone: "+91-11-2345-6790" },
+      { id: 103, name: "Neuro Institute", lat_offset: 0.012, lng_offset: -0.005, specialty: "Neurology", phone: "+91-11-2345-6791" },
+      { id: 104, name: "Kids Health Hospital", lat_offset: -0.003, lng_offset: -0.01, specialty: "Pediatrics", phone: "+91-11-2345-6792" },
+      { id: 105, name: "Emergency Trauma Center", lat_offset: 0.009, lng_offset: 0.015, specialty: "Emergency", phone: "+91-11-2345-6793" },
+      { id: 106, name: "Apollo Medical Center", lat_offset: -0.015, lng_offset: 0.003, specialty: "General", phone: "+91-11-2345-6794" },
+      { id: 107, name: "Max Heart Hospital", lat_offset: 0.018, lng_offset: 0.008, specialty: "Cardiology", phone: "+91-11-2345-6795" },
+      { id: 108, name: "Brain & Spine Clinic", lat_offset: -0.006, lng_offset: 0.018, specialty: "Neurology", phone: "+91-11-2345-6796" },
+      { id: 109, name: "Rainbow Children's Hospital", lat_offset: 0.004, lng_offset: -0.016, specialty: "Pediatrics", phone: "+91-11-2345-6797" },
+      { id: 110, name: "24x7 Emergency Care", lat_offset: -0.012, lng_offset: -0.008, specialty: "Emergency", phone: "+91-11-2345-6798" },
+      { id: 111, name: "Fortis Healthcare", lat_offset: 0.014, lng_offset: 0.012, specialty: "General", phone: "+91-11-2345-6799" },
+      { id: 112, name: "Medanta Cardiac Unit", lat_offset: -0.016, lng_offset: 0.014, specialty: "Cardiology", phone: "+91-11-2345-6800" },
+      { id: 113, name: "NIMHANS Neuro Center", lat_offset: 0.008, lng_offset: -0.012, specialty: "Neurology", phone: "+91-11-2345-6801" },
+      { id: 114, name: "Cloudnine Kids Hospital", lat_offset: -0.01, lng_offset: 0.007, specialty: "Pediatrics", phone: "+91-11-2345-6802" },
+      { id: 115, name: "Metro Emergency Hospital", lat_offset: 0.002, lng_offset: 0.02, specialty: "Emergency", phone: "+91-11-2345-6803" },
+    ]
+    setHospitals(hospitalData)
   }
 
   const filterHospitals = () => {

@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react'
+import { supabase } from '../supabaseClient'
 
 const AuthContext = createContext()
 
@@ -10,49 +11,52 @@ export const useAuth = () => {
   return context
 }
 
-const API_URL = '/api'
-
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token') || null)
+  const [session, setSession] = useState(null)
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]))
-        setUser({ email: payload.sub, name: payload.name || 'User' })
-      } catch (e) {
-        localStorage.removeItem('token')
-        setToken(null)
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession)
+      if (currentSession?.user) {
+        setUser({
+          email: currentSession.user.email,
+          name: currentSession.user.user_metadata?.full_name || 'User',
+        })
       }
-    }
-    setLoading(false)
-  }, [token])
+      setLoading(false)
+    })
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, currentSession) => {
+        setSession(currentSession)
+        if (currentSession?.user) {
+          setUser({
+            email: currentSession.user.email,
+            name: currentSession.user.user_metadata?.full_name || 'User',
+          })
+        } else {
+          setUser(null)
+        }
+      }
+    )
+
+    return () => subscription.unsubscribe()
+  }, [])
 
   const login = async (email, password) => {
     try {
-      const formData = new FormData()
-      formData.append('username', email)
-      formData.append('password', password)
-
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        body: formData,
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       })
 
-      if (!response.ok) {
-        const err = await response.json()
-        throw new Error(err.detail || 'Login failed')
+      if (error) {
+        return { success: false, error: error.message }
       }
-
-      const data = await response.json()
-      const accessToken = data.access_token
-      setToken(accessToken)
-      localStorage.setItem('token', accessToken)
-
-      const payload = JSON.parse(atob(accessToken.split('.')[1]))
-      setUser({ email: payload.sub, name: data.name || payload.name || 'User' })
 
       return { success: true }
     } catch (error) {
@@ -62,17 +66,18 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+          },
         },
-        body: JSON.stringify({ name, email, password }),
       })
 
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.detail || 'Registration failed')
+      if (error) {
+        return { success: false, error: error.message }
       }
 
       return { success: true }
@@ -81,20 +86,14 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const changePassword = async (oldPassword, newPassword) => {
+  const changePassword = async (_oldPassword, newPassword) => {
     try {
-      const response = await fetch(`${API_URL}/auth/change-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ old_password: oldPassword, new_password: newPassword }),
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
       })
 
-      if (!response.ok) {
-        const err = await response.json()
-        throw new Error(err.detail || 'Password change failed')
+      if (error) {
+        return { success: false, error: error.message }
       }
 
       return { success: true, message: 'Password changed successfully' }
@@ -103,21 +102,21 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const logout = () => {
-    setToken(null)
+  const logout = async () => {
+    await supabase.auth.signOut()
+    setSession(null)
     setUser(null)
-    localStorage.removeItem('token')
   }
 
   const value = {
-    token,
+    token: session?.access_token || null,
     user,
     login,
     register,
     logout,
     changePassword,
     loading,
-    isAuthenticated: !!token,
+    isAuthenticated: !!session,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

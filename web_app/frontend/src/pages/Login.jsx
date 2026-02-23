@@ -30,7 +30,7 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-brand">
-          <span className="auth-brand-icon">💙</span>
+          <span className="auth-brand-icon">❤️</span>
           <span className="auth-brand-name">AuraCare</span>
         </div>
         <h1>Welcome Back</h1>
@@ -74,6 +74,13 @@ const Login = () => {
             )}
           </button>
         </form>
+        <div className="auth-divider">or</div>
+        <Link to="/emergency" className="button button-danger" id="emergency-access" style={{ width: '100%', textAlign: 'center', fontSize: '1rem', fontWeight: 600, padding: '14px 20px', textDecoration: 'none' }}>
+          🚨 Emergency Access
+        </Link>
+        <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '8px' }}>
+          Access hospitals & ambulance without an account
+        </p>
         <p className="auth-link">
           Don't have an account? <Link to="/register">Create one</Link>
         </p>

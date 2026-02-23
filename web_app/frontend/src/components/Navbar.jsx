@@ -20,7 +20,7 @@ const Navbar = () => {
     <nav className="navbar" id="main-navbar">
       <div className="navbar-container">
         <Link to="/communication" className="navbar-brand" id="navbar-brand">
-          <span className="brand-icon">💙</span>
+          <span className="brand-icon">❤️</span>
           <span className="brand-text">AuraCare</span>
         </Link>
 
