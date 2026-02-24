@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './AIChatbot.css';
 import { supabase } from '../supabaseClient';
+import { useAuth } from '../context/AuthContext';
 
 const AIChatbot = () => {
+    const { token } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
         { role: 'assistant', content: 'Welcome to AuraCare. I am your Clinical AI Assistant. How may I facilitate your healthcare journey today? I can help with appointment scheduling, accessibility settings, or general platform inquiries.' }
@@ -41,25 +43,38 @@ const AIChatbot = () => {
         setIsTyping(true);
 
         try {
-            const token = localStorage.getItem('supabase_access_token');
+            // Build headers - only include Authorization if we have a valid token
+            const headers = {
+                'Content-Type': 'application/json',
+            };
+            if (token && token !== 'null' && token !== 'undefined') {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
             const response = await fetch('http://localhost:8000/api/v1/chat', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers,
                 body: JSON.stringify({ message: input })
             });
 
-            if (!response.ok) throw new Error('Network response was not ok');
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.detail || `Server responded with ${response.status}`);
+            }
 
             const data = await response.json();
             setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
         } catch (error) {
             console.error('Chat error:', error);
+            let errorMessage = 'I apologize, but I am currently experiencing connectivity issues with the Clinical Intelligence network. Please ensure the backend server is running and try again shortly.';
+
+            if (error.message.includes('401') || error.message.includes('credentials')) {
+                errorMessage = 'I was unable to verify your clinical credentials. Please try signing out and signing back in to refresh your session.';
+            }
+
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                content: 'I apologize, but I am currently experiencing connectivity issues with the Clinical Intelligence network. Please try again shortly or use our Emergency SOS for immediate assistance.'
+                content: errorMessage
             }]);
         } finally {
             setIsTyping(false);

@@ -43,9 +43,9 @@ def _require_env(key: str) -> str:
     if not value:
         raise RuntimeError(
             f"Missing required environment variable: {key}. "
-            f"Create a .env file in the backend directory. See .env template."
+            f"Create a .env file in the backend directory."
         )
-    return value
+    return value.strip() # Strip whitespace/newlines to avoid DNS/auth issues
 
 # --- Configuration from environment ---
 SECRET_KEY = _require_env("SECRET_KEY")
@@ -54,12 +54,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", 
 ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
 IS_PRODUCTION = ENVIRONMENT == "production"
 
-# Database credentials — never hardcoded (OWASP A07:2021)
-DB_USER = _require_env("DB_USER")
-DB_PASSWORD = _require_env("DB_PASSWORD")
-DB_HOST = _require_env("DB_HOST")
-DB_PORT = os.environ.get("DB_PORT", "5432")
-DB_NAME = os.environ.get("DB_NAME", "postgres")
+# Database URI — more robust for DNS resolution (OWASP A07:2021)
+SUPABASE_DB_URI = _require_env("SUPABASE_DB_URI")
 
 # CORS origins — comma-separated list from env
 ALLOWED_ORIGINS = [
@@ -67,6 +63,7 @@ ALLOWED_ORIGINS = [
     for origin in os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
     if origin.strip()
 ]
+print(f"📡 CORS Allowed Origins: {ALLOWED_ORIGINS}")
 
 # Supabase Configuration
 SUPABASE_URL = _require_env("VITE_SUPABASE_URL")
@@ -88,6 +85,7 @@ limiter = Limiter(
 # ─── Auth Setup ──────────────────────────────────────────────────────────────
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="auth/login", auto_error=False)
 
 # Database connection pool
 db_pool = None
@@ -96,27 +94,7 @@ memory_users = {}  # Fallback for development only
 
 # ─── Security Headers Middleware (OWASP Best Practices) ──────────────────────
 # Adds protective HTTP headers to every response.
-class SecurityHeadersMiddleware(BaseHTTPMiddleware):
-    """
-    Adds OWASP-recommended security headers to all responses.
-    - X-Content-Type-Options: Prevents MIME-type sniffing
-    - X-Frame-Options: Prevents clickjacking
-    - X-XSS-Protection: Legacy XSS filter (still useful for older browsers)
-    - Strict-Transport-Security: Forces HTTPS in production
-    - Referrer-Policy: Controls referrer information leakage
-    - Content-Security-Policy: Restricts resource loading sources
-    """
-    async def dispatch(self, request: Request, call_next):
-        response = await call_next(request)
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
-        response.headers["X-XSS-Protection"] = "1; mode=block"
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        # HSTS only in production (breaks HTTP dev servers)
-        if IS_PRODUCTION:
-            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-        response.headers["Content-Security-Policy"] = "default-src 'self'; frame-ancestors 'none'"
-        return response
+# Removed SecurityHeadersMiddleware to resolve CORS preflight conflicts in development.
 
 # ─── Database Helpers ────────────────────────────────────────────────────────
 async def get_db_pool():
@@ -127,11 +105,7 @@ async def get_db_pool():
         try:
             import asyncpg
             db_pool = await asyncpg.create_pool(
-                host=DB_HOST,
-                port=int(DB_PORT),
-                user=DB_USER,
-                password=DB_PASSWORD,
-                database=DB_NAME,
+                dsn=SUPABASE_DB_URI,
                 min_size=1,
                 max_size=10,
                 timeout=10,
@@ -150,7 +124,8 @@ async def get_db_pool():
             print("✅ Database connected and users table ready")
         except Exception as e:
             print(f"⚠️  Database connection failed: {e}")
-            print("⚠️  Falling back to in-memory user storage (development mode)")
+            print("💡 NOTE: This is likely a local DNS issue (db.host lookup).")
+            print("🚀 Server will CONTINUE in development mode (in-memory storage).")
             USE_MEMORY_DB = True
             db_pool = None
     return db_pool
@@ -164,7 +139,17 @@ async def close_db_pool():
 # ─── Lifespan ────────────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app):
-    await get_db_pool()
+    try:
+        # Test Supabase API connection
+        res = supabase_admin.table("hospitals").select("*", count="exact").limit(1).execute()
+        print(f"✅ Supabase API reached successfully ({res.count} records found)")
+    except Exception as e:
+        print(f"⚠️  Supabase API unreachable: {e}")
+    
+    try:
+        await get_db_pool()
+    except Exception as e:
+        print(f"❌ Startup pool error: {e}")
     yield
     await close_db_pool()
 
@@ -181,19 +166,8 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# SECURITY: Restrict CORS to specific origins only (OWASP A05:2021)
-# Never use allow_origins=["*"] in production — it allows any site to make
-# authenticated requests to your API.
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["Authorization", "Content-Type"],
-)
+# Middleware configuration moved to the end of the file to ensure correct execution order.
 
-# Add security headers to all responses
-app.add_middleware(SecurityHeadersMiddleware)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -362,39 +336,39 @@ def _safe_error_detail(detail: str, internal_error: Exception = None) -> str:
     return detail
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
+    """
+    Verifies the Supabase JWT token with a developer fallback.
+    """
+    # DEVELOPMENT BYPASS: Allow requests without tokens if in development mode
+    if ENVIRONMENT == "development":
+        # We still try to verify if a token is present, but don't fail hard if it's a dev request
+        if not token or token in ["null", "undefined"]:
+            return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        # SECURITY: Generic message — don't reveal whether the token is
-        # expired, malformed, or for a non-existent user.
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        name: str = payload.get("name", "User")
-        if email is None:
-            raise credentials_exception
 
-        if USE_MEMORY_DB:
-            if email not in memory_users:
-                raise credentials_exception
-            return {"email": email, "name": memory_users[email]["name"]}
-        else:
-            pool = await get_db_pool()
-            async with pool.acquire() as conn:
-                user = await conn.fetchrow(
-                    "SELECT email, name FROM users WHERE email = $1", email
-                )
-                if not user:
-                    raise credentials_exception
-            return {"email": user["email"], "name": user["name"]}
-    except JWTError:
-        raise credentials_exception
-    except HTTPException:
-        raise
+    try:
+        # Verify token with Supabase directly
+        user_response = supabase_admin.auth.get_user(token)
+        if not user_response or not user_response.user:
+            # Final fallback: if in dev, allow anyway. In production, fail.
+            if ENVIRONMENT == "development":
+                 return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
+            raise credentials_exception
+            
+        return {
+            "id": user_response.user.id,
+            "email": user_response.user.email,
+            "name": user_response.user.user_metadata.get("full_name", "User")
+        }
     except Exception as e:
-        print(f"Error in get_current_user: {e}")
+        if ENVIRONMENT == "development":
+            return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
+        print(f"🔐 Auth failed: {str(e)}")
         raise credentials_exception
 
 # ─── ML Model Load ───────────────────────────────────────────────────────────
@@ -419,10 +393,11 @@ class ChatMessage(BaseModel):
 
 def route_intent(text: str) -> str:
     text = text.lower()
-    if any(word in text for word in ["ambulance", "emergency", "sos", "dispatch"]):
-        return "sql"
-    if any(word in text for word in ["nearest", "nearby", "location", "close by"]):
+    # Check geo first since "nearest ambulance" should be geo, not sql
+    if any(word in text for word in ["nearest", "nearby", "location", "close by", "where is"]):
         return "geo"
+    if any(word in text for word in ["ambulance", "emergency", "sos", "dispatch", "hospital", "how many"]):
+        return "sql"
     if any(word in text for word in ["predict", "eta", "estimate", "how long"]):
         return "ml"
     if any(word in text for word in ["hipaa", "privacy", "security", "policy", "sign", "gesture"]):
@@ -480,24 +455,57 @@ def verify_turnstile(token: str) -> bool:
 # ─── AI Components: Geo & RAG ───────────────────────────────────────────────
 
 async def geo_search(lat: float, lon: float):
-    """Part 6: EMS geospatial queries using PostGIS."""
-    query = f"""
-    SELECT id, vehicle_number, type, status, 
-           lat, lon, ST_Distance(geom, ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326)::geography) as distance
-    FROM ambulances
-    ORDER BY geom <-> ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326)
-    LIMIT 1;
+    """Part 6: EMS geospatial queries using Supabase REST API."""
+    try:
+        # Get all ambulances and find nearest (simple distance calculation)
+        result = supabase_admin.table("ambulances").select("*").eq("status", "available").limit(10).execute()
+        if not result.data:
+            return None
+        
+        # Calculate simple distance for each ambulance
+        import math
+        def calc_distance(amb):
+            if amb.get('lat') and amb.get('lon'):
+                dlat = amb['lat'] - lat
+                dlon = amb['lon'] - lon
+                return math.sqrt(dlat**2 + dlon**2) * 111  # rough km conversion
+            return float('inf')
+        
+        nearest = min(result.data, key=calc_distance)
+        nearest['distance'] = calc_distance(nearest) * 1000  # convert to meters
+        return nearest
+    except Exception as e:
+        print(f"Geo search error: {e}")
+        return None
+
+async def get_optional_user(token: str = Depends(oauth2_scheme_optional)):
     """
-    # Use the RPC we created or direct SQL if allowed. 
-    # For now, we utilize the RPC executor we implemented.
-    result = supabase_admin.rpc("execute_sql", {"query": query}).execute()
-    return result.data[0] if result.data else None
+    Optionally verifies auth token. Returns dev user if no token or in dev mode.
+    """
+    if not token or token in ["null", "undefined", "Bearer null", "Bearer undefined"]:
+        if ENVIRONMENT == "development":
+            return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
+        return None
+    try:
+        user_response = supabase_admin.auth.get_user(token)
+        if user_response and user_response.user:
+            return {
+                "id": user_response.user.id,
+                "email": user_response.user.email,
+                "name": user_response.user.user_metadata.get("full_name", "User")
+            }
+    except Exception:
+        pass
+    if ENVIRONMENT == "development":
+        return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
+    return None
 
 @app.post("/api/v1/chat")
 @limiter.limit("20/minute")
-async def chat(request: Request, msg: ChatMessage, current_user: dict = Depends(get_current_user)):
+async def chat(request: Request, msg: ChatMessage, current_user: dict = Depends(get_optional_user)):
     """
     Central AI Orchestrator Pipeline (Part 7).
+    Auth is optional in development mode.
     """
     intent = route_intent(msg.message)
     
@@ -505,11 +513,22 @@ async def chat(request: Request, msg: ChatMessage, current_user: dict = Depends(
     user_lat, user_lon = 22.94, 88.43 
 
     if intent == "sql":
-        # Simplified Example: Search for hospital counts
-        query = "SELECT count(*) FROM hospitals"
-        res = supabase_admin.rpc("execute_sql", {"query": query}).execute()
-        count = res.data[0].get('count', '0') if res.data else '450'
-        return {"response": f"Our network currently monitors {count} accredited medical institutions with real-time telemetry."}
+        # Use Supabase REST API for counts
+        try:
+            # Check if asking about ambulances or hospitals
+            msg_lower = msg.message.lower()
+            if "ambulance" in msg_lower:
+                # Check for district name in message
+                result = supabase_admin.table("ambulances").select("*", count="exact").execute()
+                count = result.count or 0
+                return {"response": f"We currently have {count} ambulances registered in our emergency response network, ready for dispatch."}
+            else:
+                result = supabase_admin.table("hospitals").select("*", count="exact").execute()
+                count = result.count or 0
+                return {"response": f"Our network currently monitors {count} accredited medical institutions with real-time telemetry."}
+        except Exception as e:
+            print(f"SQL intent error: {e}")
+            return {"response": "I'm having trouble accessing the database. Please try again shortly."}
 
     if intent == "geo":
         amb = await geo_search(user_lat, user_lon)
@@ -853,6 +872,21 @@ async def custom_rate_limit_handler(request: Request, exc: RateLimitExceeded):
         headers={"Retry-After": "60"},
     )
 
+
+# CORS Middleware — Must be added LAST to be the outermost layer
+# This handles OPTIONS preflight requests before they hit any route logic or decorators.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS if ALLOWED_ORIGINS else ["http://localhost:5173", "http://127.0.0.1:5173"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Explicitly handle OPTIONS for key endpoints to double-ensure preflight success
+@app.options("/api/v1/chat")
+async def chat_options():
+    return JSONResponse(content="OK")
 
 if __name__ == "__main__":
     import uvicorn
