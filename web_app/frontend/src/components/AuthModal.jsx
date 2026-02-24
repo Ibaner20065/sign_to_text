@@ -10,6 +10,7 @@ const AuthModal = ({ mode = 'login', onClose, onSwitchMode }) => {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [isHumanVerified, setIsHumanVerified] = useState(false)
     const { login, register } = useAuth()
     const navigate = useNavigate()
 
@@ -38,6 +39,7 @@ const AuthModal = ({ mode = 'login', onClose, onSwitchMode }) => {
         setEmail('')
         setPassword('')
         setName('')
+        setIsHumanVerified(false)
         onSwitchMode?.(newMode)
     }
 
@@ -84,7 +86,6 @@ const AuthModal = ({ mode = 'login', onClose, onSwitchMode }) => {
 
                 {/* Brand */}
                 <div className="auth-modal-brand">
-                    <span className="auth-modal-brand-icon">❤️</span>
                     <span className="auth-modal-brand-name">AuraCare</span>
                 </div>
 
@@ -145,9 +146,22 @@ const AuthModal = ({ mode = 'login', onClose, onSwitchMode }) => {
                         />
                     </div>
 
+                    <div className="auth-modal-verification">
+                        <input
+                            type="checkbox"
+                            id="human-verify"
+                            className="auth-verification-checkbox"
+                            checked={isHumanVerified}
+                            onChange={(e) => setIsHumanVerified(e.target.checked)}
+                        />
+                        <label htmlFor="human-verify" className="auth-verification-label">
+                            I verify that I am a human healthcare professional
+                        </label>
+                    </div>
+
                     {error && <div className="auth-modal-error">{error}</div>}
 
-                    <button type="submit" className="auth-modal-submit" disabled={loading}>
+                    <button type="submit" className="auth-modal-submit" disabled={loading || !isHumanVerified}>
                         {loading ? (
                             <span className="auth-modal-loading">
                                 <span className="auth-spinner"></span>

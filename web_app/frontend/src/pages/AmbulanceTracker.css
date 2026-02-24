@@ -217,6 +217,57 @@
   justify-content: flex-end;
 }
 
+/* --- Booking Simulation --- */
+.active-booking {
+  border-color: var(--accent-400) !important;
+  box-shadow: 0 0 20px rgba(0, 245, 212, 0.15);
+  background: rgba(0, 245, 212, 0.05) !important;
+}
+
+.book-mini-button {
+  background: var(--accent-500);
+  color: #030712;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.book-mini-button:hover {
+  background: var(--accent-400);
+  transform: scale(1.05);
+}
+
+.booking-cta-btn {
+  width: 100%;
+  margin-top: 10px;
+  background: var(--accent-500);
+  color: #030712;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.booking-cta-btn:hover {
+  background: var(--accent-400);
+}
+
+.ambulance-popup.active-dispatch {
+  border-top: 3px solid var(--accent-400);
+}
+
+.ambulance-popup.active-dispatch h3 {
+  color: var(--accent-400);
+  font-weight: 800;
+}
+
 @media (max-width: 768px) {
   .ambulance-info-grid {
     grid-template-columns: 1fr;

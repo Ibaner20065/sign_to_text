@@ -44,6 +44,10 @@ const AmbulanceTracker = () => {
   const [ambulances, setAmbulances] = useState([])
   const [showSOSModal, setShowSOSModal] = useState(false)
   const [sosSent, setSosSent] = useState(false)
+  const [bookingStage, setBookingStage] = useState('idle') // idle, assigning, enroute, arrived
+  const [bookedAmbId, setBookedAmbId] = useState(null)
+  const [simLocation, setSimLocation] = useState(null)
+  const [simETA, setSimETA] = useState(null)
 
   const intervalRef = useRef(null)
 
@@ -113,8 +117,54 @@ const AmbulanceTracker = () => {
         lng: userLocation[1] + amb.lng_offset,
       }))
       setAmbulances(updatedAmbulances)
+
+      // Initialize simulation if first run
+      if (bookingStage === 'idle' && !simLocation) {
+        // Just for visual baseline
+      }
     }
   }
+
+  const handleBook = (amb) => {
+    setBookedAmbId(amb.id)
+    setBookingStage('assigning')
+    setSimLocation([amb.lat, amb.lng])
+
+    // Simulate dispatch delay
+    setTimeout(() => {
+      setBookingStage('enroute')
+      setSimETA(parseInt(amb.eta))
+    }, 2000)
+  }
+
+  // Simulation Animation Logic
+  useEffect(() => {
+    if (bookingStage === 'enroute' && simLocation && userLocation) {
+      const timer = setInterval(() => {
+        setSimLocation(current => {
+          const latDiff = userLocation[0] - current[0]
+          const lngDiff = userLocation[1] - current[1]
+
+          // Move 10% of the way each tick
+          const nextLat = current[0] + latDiff * 0.1
+          const nextLng = current[1] + lngDiff * 0.1
+
+          // Check if arrived
+          if (Math.abs(latDiff) < 0.0005 && Math.abs(lngDiff) < 0.0005) {
+            setBookingStage('arrived')
+            clearInterval(timer)
+            return userLocation
+          }
+
+          return [nextLat, nextLng]
+        })
+
+        setSimETA(prev => (prev > 1 ? prev - 0.2 : 1))
+      }, 1000)
+
+      return () => clearInterval(timer)
+    }
+  }, [bookingStage, userLocation])
 
   const handleSOS = () => {
     setShowSOSModal(true)
@@ -139,9 +189,9 @@ const AmbulanceTracker = () => {
 
   if (!userLocation) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p className="loading-text">Getting your location...</p>
+      <div className="loading-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg-primary)' }}>
+        <div className="loading-spinner" style={{ width: '40px', height: '40px', border: '4px solid rgba(255,255,255,0.1)', borderTopColor: 'var(--accent-400)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+        <p className="loading-text" style={{ marginTop: '20px', color: 'var(--text-secondary)' }}>Initializing Neural GPS...</p>
       </div>
     )
   }
@@ -154,7 +204,7 @@ const AmbulanceTracker = () => {
         {/* Ambulance Info Cards */}
         <div className="ambulance-info-grid" id="ambulance-info-grid">
           {ambulances.map((amb) => (
-            <div key={amb.id} className="ambulance-info-card">
+            <div key={amb.id} className={`ambulance-info-card ${bookedAmbId === amb.id ? 'active-booking' : ''}`}>
               <div className={`amb-icon-wrap ${getAmbTypeClass(amb.type)}`}>
                 <Truck size={24} />
               </div>
@@ -162,11 +212,16 @@ const AmbulanceTracker = () => {
                 <h4>Ambulance #{amb.id} — {amb.type}</h4>
                 <p>
                   Status: <span className={`badge ${amb.status === 'Moving' ? 'badge-success' : 'badge-warning'}`}>
-                    {amb.status}
+                    {bookedAmbId === amb.id && bookingStage !== 'idle' ? 'Dispatched' : amb.status}
                   </span>
                 </p>
-                <p className="amb-eta">ETA: {amb.eta}</p>
+                <p className="amb-eta">
+                  ETA: {bookedAmbId === amb.id && bookingStage === 'enroute' ? `${Math.ceil(simETA)} mins` : amb.eta}
+                </p>
               </div>
+              {bookingStage === 'idle' && (
+                <button className="book-mini-button" onClick={() => handleBook(amb)}>Book</button>
+              )}
             </div>
           ))}
         </div>
@@ -183,18 +238,40 @@ const AmbulanceTracker = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MapUpdater center={userLocation} />
-            {ambulances.map((amb) => (
-              <Marker key={amb.id} position={[amb.lat, amb.lng]} icon={ambulanceIcon}>
+            {ambulances.map((amb) => {
+              // Hide the original marker if it's being "simulated" separately to avoid double markers
+              if (bookedAmbId === amb.id && bookingStage !== 'idle') return null;
+
+              return (
+                <Marker key={amb.id} position={[amb.lat, amb.lng]} icon={ambulanceIcon}>
+                  <Popup>
+                    <div className="ambulance-popup">
+                      <h3><Truck size={20} style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Ambulance #{amb.id}</h3>
+                      <p><strong>Status:</strong> {amb.status}</p>
+                      <p><strong>Type:</strong> {amb.type}</p>
+                      <p><strong>ETA:</strong> {amb.eta}</p>
+                      {bookingStage === 'idle' && (
+                        <button className="booking-cta-btn" onClick={() => handleBook(amb)}>Assign to Me</button>
+                      )}
+                    </div>
+                  </Popup>
+                </Marker>
+              )
+            })}
+
+            {/* Simulated Active Ambulance Marker */}
+            {bookingStage !== 'idle' && simLocation && (
+              <Marker position={simLocation} icon={ambulanceIcon}>
                 <Popup>
-                  <div className="ambulance-popup">
-                    <h3><Truck size={20} style={{ verticalAlign: 'middle', marginRight: '8px' }} /> Ambulance #{amb.id}</h3>
-                    <p><strong>Status:</strong> {amb.status}</p>
-                    <p><strong>Type:</strong> {amb.type}</p>
-                    <p><strong>ETA:</strong> {amb.eta}</p>
+                  <div className="ambulance-popup active-dispatch">
+                    <h3>🚑 EMERGENCY DISPATCH</h3>
+                    <p><strong>Tracking:</strong> Ambulance #{bookedAmbId}</p>
+                    <p><strong>Status:</strong> {bookingStage === 'enroute' ? 'En Route' : 'Arrived'}</p>
+                    <p><strong>ETA:</strong> {bookingStage === 'arrived' ? 'READY' : `${Math.ceil(simETA)} mins`}</p>
                   </div>
                 </Popup>
               </Marker>
-            ))}
+            )}
             <Marker position={userLocation} icon={userIcon}>
               <Popup>📍 Your Location</Popup>
             </Marker>
