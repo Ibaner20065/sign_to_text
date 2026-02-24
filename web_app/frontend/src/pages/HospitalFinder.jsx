@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { Hospital, Heart, Brain, Baby, Siren, MapPin } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 import './HospitalFinder.css'
 
@@ -58,10 +59,13 @@ const getSpecialtyClass = (specialty) => {
 }
 
 const HospitalFinder = () => {
+  const { token, user } = useAuth()
   const [userLocation, setUserLocation] = useState(null)
   const [hospitals, setHospitals] = useState([])
   const [filteredHospitals, setFilteredHospitals] = useState([])
   const [selectedSpecialty, setSelectedSpecialty] = useState('All')
+  const [bookingStatus, setBookingStatus] = useState({})
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 
   const specialties = ['All', 'General', 'Cardiology', 'Neurology', 'Pediatrics', 'Emergency']
@@ -141,6 +145,48 @@ const HospitalFinder = () => {
     setFilteredHospitals(filtered)
   }
 
+  const handleBookBed = async (hospital) => {
+    if (!token) {
+      setBookingStatus((prev) => ({
+        ...prev,
+        [hospital.id]: { type: 'error', message: 'Please log in to book a bed.' }
+      }))
+      return
+    }
+
+    try {
+      const response = await fetch(`${apiUrl}/api/v1/hospitals/book-bed`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          hospital_id: String(hospital.id),
+          hospital_name: hospital.name,
+          bed_type: hospital.specialty === 'Emergency' ? 'emergency' : 'general',
+          patient_name: user?.name || 'Patient',
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.detail || `Booking failed (${response.status})`)
+      }
+
+      const data = await response.json()
+      setBookingStatus((prev) => ({
+        ...prev,
+        [hospital.id]: { type: 'success', message: data.message }
+      }))
+    } catch (error) {
+      setBookingStatus((prev) => ({
+        ...prev,
+        [hospital.id]: { type: 'error', message: error.message || 'Unable to book bed.' }
+      }))
+    }
+  }
+
   if (!userLocation) {
     return (
       <div className="loading-container">
@@ -215,6 +261,14 @@ const HospitalFinder = () => {
                 <h4>{hospital.name}</h4>
                 <p><strong>Distance:</strong> <span className="distance-value">{hospital.distance} km</span></p>
                 <p><strong>Phone:</strong> <span className="phone-value">{hospital.phone}</span></p>
+                <button className="book-bed-button" onClick={() => handleBookBed(hospital)}>
+                  Book Bed
+                </button>
+                {bookingStatus[hospital.id] && (
+                  <p className={`booking-feedback ${bookingStatus[hospital.id].type}`}>
+                    {bookingStatus[hospital.id].message}
+                  </p>
+                )}
               </div>
             ))}
           </div>

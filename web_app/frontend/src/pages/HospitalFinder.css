@@ -145,6 +145,36 @@
   color: var(--primary-400);
 }
 
+.book-bed-button {
+  margin-top: var(--space-3);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-4);
+  background: var(--primary-500);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.book-bed-button:hover {
+  background: var(--primary-600);
+}
+
+.booking-feedback {
+  margin-top: var(--space-2) !important;
+  font-size: 0.8rem !important;
+  font-weight: 600;
+}
+
+.booking-feedback.success {
+  color: var(--success-400) !important;
+}
+
+.booking-feedback.error {
+  color: var(--danger-400) !important;
+}
+
 /* --- Specialty Tags --- */
 .specialty-tag {
   display: inline-block;

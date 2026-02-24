@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { Truck, Siren, CheckCircle, AlertTriangle } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 import './AmbulanceTracker.css'
 
@@ -40,14 +41,19 @@ function MapUpdater({ center }) {
 }
 
 const AmbulanceTracker = () => {
+  const { token } = useAuth()
   const [userLocation, setUserLocation] = useState(null)
   const [ambulances, setAmbulances] = useState([])
   const [showSOSModal, setShowSOSModal] = useState(false)
   const [sosSent, setSosSent] = useState(false)
   const [bookingStage, setBookingStage] = useState('idle') // idle, assigning, enroute, arrived
   const [bookedAmbId, setBookedAmbId] = useState(null)
+  const [bookingId, setBookingId] = useState(null)
+  const [bookingMessage, setBookingMessage] = useState('')
+  const [bookingError, setBookingError] = useState('')
   const [simLocation, setSimLocation] = useState(null)
   const [simETA, setSimETA] = useState(null)
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
   const intervalRef = useRef(null)
 
@@ -125,17 +131,75 @@ const AmbulanceTracker = () => {
     }
   }
 
-  const handleBook = (amb) => {
-    setBookedAmbId(amb.id)
-    setBookingStage('assigning')
-    setSimLocation([amb.lat, amb.lng])
+  const handleBook = async (amb) => {
+    setBookingError('')
+    if (!token) {
+      setBookingError('Please log in to book an ambulance.')
+      return
+    }
 
-    // Simulate dispatch delay
-    setTimeout(() => {
-      setBookingStage('enroute')
-      setSimETA(parseInt(amb.eta))
-    }, 2000)
+    try {
+      const response = await fetch(`${apiUrl}/api/v1/ambulance/book`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          latitude: userLocation[0],
+          longitude: userLocation[1],
+          emergency_note: 'Emergency booking from tracker',
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.detail || `Booking failed (${response.status})`)
+      }
+
+      const data = await response.json()
+      setBookedAmbId(amb.id)
+      setBookingId(data.booking_id)
+      setBookingStage(data.status || 'assigning')
+      setBookingMessage(data.message || 'Ambulance dispatch initiated.')
+      setSimLocation([amb.lat, amb.lng])
+      setSimETA(data.eta_minutes || parseInt(amb.eta, 10) || 10)
+    } catch (error) {
+      setBookingError(error.message || 'Unable to book ambulance right now.')
+    }
   }
+
+  useEffect(() => {
+    if (!bookingId || !token) {
+      return undefined
+    }
+
+    const poller = setInterval(async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/v1/ambulance/booking/${bookingId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        })
+        if (!response.ok) {
+          return
+        }
+
+        const data = await response.json()
+        setBookingStage(data.status)
+        setSimETA(data.eta_minutes)
+        setBookingMessage(data.message)
+
+        if (data.status === 'arrived') {
+          setSimLocation(userLocation)
+          clearInterval(poller)
+        }
+      } catch (_error) {
+      }
+    }, 5000)
+
+    return () => clearInterval(poller)
+  }, [bookingId, token, apiUrl, userLocation])
 
   // Simulation Animation Logic
   useEffect(() => {
@@ -225,6 +289,18 @@ const AmbulanceTracker = () => {
             </div>
           ))}
         </div>
+
+        {bookingMessage && (
+          <div className="booking-status-banner" id="booking-status-banner">
+            {bookingMessage}
+          </div>
+        )}
+
+        {bookingError && (
+          <div className="booking-error-banner" id="booking-error-banner">
+            {bookingError}
+          </div>
+        )}
 
         {/* Map */}
         <div className="map-wrapper" id="ambulance-map">

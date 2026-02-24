@@ -115,6 +115,49 @@
     animation: fadeIn 0.4s ease both;
 }
 
+.coming-soon-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    max-width: 720px;
+}
+
+.coming-soon-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--primary-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-4);
+}
+
+.coming-soon-card h2 {
+    margin: 0 0 var(--space-3);
+    color: var(--text-primary);
+}
+
+.coming-soon-card p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-4);
+}
+
+.coming-soon-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    font-size: 0.85rem;
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
     .emergency-page {

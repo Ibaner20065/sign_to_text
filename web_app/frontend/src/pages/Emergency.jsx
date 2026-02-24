@@ -1,9 +1,24 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Siren, Hospital, Truck, ArrowLeft } from 'lucide-react'
+import { Siren, Hospital, Truck, ArrowLeft, Pill } from 'lucide-react'
 import AmbulanceTracker from './AmbulanceTracker'
 import HospitalFinder from './HospitalFinder'
 import './Emergency.css'
+
+const MedicineDeliveryComingSoon = () => {
+    return (
+        <div className="coming-soon-card">
+            <div className="coming-soon-icon">
+                <Pill size={32} />
+            </div>
+            <h2>Medicine Delivery — Coming Soon</h2>
+            <p>
+                Online medicine ordering and doorstep delivery with live order tracking will be available soon.
+            </p>
+            <span className="coming-soon-badge">Launching Soon</span>
+        </div>
+    )
+}
 
 const Emergency = () => {
     const [activeTab, setActiveTab] = useState('hospitals')
@@ -40,10 +55,20 @@ const Emergency = () => {
                 >
                     <Truck size={20} /> Track Ambulance
                 </button>
+                <button
+                    className={`emergency-tab ${activeTab === 'medicine' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('medicine')}
+                    id="tab-medicine"
+                    style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+                >
+                    <Pill size={20} /> Medicine Delivery
+                </button>
             </div>
 
             <div className="emergency-content">
-                {activeTab === 'hospitals' ? <HospitalFinder /> : <AmbulanceTracker />}
+                {activeTab === 'hospitals' && <HospitalFinder />}
+                {activeTab === 'ambulance' && <AmbulanceTracker />}
+                {activeTab === 'medicine' && <MedicineDeliveryComingSoon />}
             </div>
         </div>
     )

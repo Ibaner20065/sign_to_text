@@ -21,6 +21,7 @@ from datetime import datetime, timedelta
 from contextlib import asynccontextmanager
 from typing import List, Optional
 from starlette.middleware.base import BaseHTTPMiddleware
+from uuid import uuid4
 import joblib
 import numpy as np
 import os
@@ -29,6 +30,7 @@ import io
 import requests
 import json
 import pandas as pd
+import random
 from supabase import create_client, Client
 
 # ─── SECURITY: Load secrets from environment variables ───────────────────────
@@ -91,6 +93,8 @@ oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="auth/login", auto_error=
 db_pool = None
 USE_MEMORY_DB = False
 memory_users = {}  # Fallback for development only
+ambulance_bookings = {}
+bed_bookings = {}
 
 # ─── Security Headers Middleware (OWASP Best Practices) ──────────────────────
 # Adds protective HTTP headers to every response.
@@ -307,6 +311,23 @@ class ChangePassword(BaseModel):
         return v
 
 
+class AmbulanceBookingRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    latitude: float = Field(..., ge=-90, le=90)
+    longitude: float = Field(..., ge=-180, le=180)
+    emergency_note: str = Field(default="General Emergency", min_length=1, max_length=200)
+
+
+class BedBookingRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    hospital_id: str = Field(..., min_length=1, max_length=64)
+    hospital_name: str = Field(..., min_length=1, max_length=200)
+    bed_type: str = Field(default="general", min_length=3, max_length=32)
+    patient_name: str = Field(..., min_length=1, max_length=120)
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # HELPER FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -334,6 +355,23 @@ def _safe_error_detail(detail: str, internal_error: Exception = None) -> str:
         print(f"[ERROR] {detail}: {internal_error}")
         return "An internal error occurred. Please try again later."
     return detail
+
+
+def _get_booking_status(created_at: datetime, eta_minutes: int) -> str:
+    elapsed_seconds = (datetime.utcnow() - created_at).total_seconds()
+    if elapsed_seconds < 8:
+        return "assigning"
+    if elapsed_seconds < eta_minutes * 60:
+        return "enroute"
+    return "arrived"
+
+
+def _get_booking_message(status: str, vehicle_label: str) -> str:
+    if status == "assigning":
+        return f"Dispatch confirmed. Assigning nearest unit {vehicle_label}."
+    if status == "enroute":
+        return f"Ambulance {vehicle_label} is enroute to your location."
+    return f"Ambulance {vehicle_label} has arrived at your pickup point."
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     """
@@ -801,6 +839,84 @@ async def get_ambulance_status(request: Request, current_user: dict = Depends(ge
     }
 
 
+@app.post("/api/v1/ambulance/book")
+@limiter.limit("6/minute")
+async def book_ambulance(request: Request, payload: AmbulanceBookingRequest, current_user: dict = Depends(get_current_user)):
+    try:
+        ambulances = []
+        try:
+            amb_res = supabase_admin.table("ambulances").select("id,vehicle_number,type,status,lat,lon").limit(30).execute()
+            ambulances = amb_res.data or []
+        except Exception as e:
+            print(f"⚠️ Ambulance fetch failed, using fallback unit: {e}")
+
+        selected = None
+        best_distance = float("inf")
+        for ambulance in ambulances:
+            amb_lat = ambulance.get("lat")
+            amb_lon = ambulance.get("lon")
+            if amb_lat is None or amb_lon is None:
+                continue
+            distance = ((amb_lat - payload.latitude) ** 2 + (amb_lon - payload.longitude) ** 2) ** 0.5
+            if distance < best_distance:
+                selected = ambulance
+                best_distance = distance
+
+        ambulance_id = str(selected.get("id")) if selected else f"SIM-{random.randint(100, 999)}"
+        vehicle_label = selected.get("vehicle_number", f"#{ambulance_id}") if selected else f"#{ambulance_id}"
+        eta_minutes = random.randint(5, 12)
+
+        booking_id = str(uuid4())
+        created_at = datetime.utcnow()
+        ambulance_bookings[booking_id] = {
+            "booking_id": booking_id,
+            "ambulance_id": ambulance_id,
+            "vehicle_label": vehicle_label,
+            "status": "assigning",
+            "eta_minutes": eta_minutes,
+            "latitude": payload.latitude,
+            "longitude": payload.longitude,
+            "emergency_note": payload.emergency_note,
+            "created_at": created_at,
+            "user_email": current_user["email"],
+        }
+
+        return {
+            "booking_id": booking_id,
+            "ambulance_id": ambulance_id,
+            "vehicle_label": vehicle_label,
+            "status": "assigning",
+            "eta_minutes": eta_minutes,
+            "message": _get_booking_message("assigning", vehicle_label),
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=_safe_error_detail("Ambulance booking failed", e))
+
+
+@app.get("/api/v1/ambulance/booking/{booking_id}")
+@limiter.limit("30/minute")
+async def get_ambulance_booking_status(request: Request, booking_id: str, current_user: dict = Depends(get_current_user)):
+    booking = ambulance_bookings.get(booking_id)
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    if booking.get("user_email") != current_user.get("email"):
+        raise HTTPException(status_code=403, detail="Access denied for this booking")
+
+    status_now = _get_booking_status(booking["created_at"], booking["eta_minutes"])
+    elapsed_minutes = (datetime.utcnow() - booking["created_at"]).total_seconds() / 60
+    eta_left = max(0, int(round(booking["eta_minutes"] - elapsed_minutes)))
+
+    booking["status"] = status_now
+    return {
+        "booking_id": booking_id,
+        "ambulance_id": booking["ambulance_id"],
+        "vehicle_label": booking["vehicle_label"],
+        "status": status_now,
+        "eta_minutes": eta_left,
+        "message": _get_booking_message(status_now, booking["vehicle_label"]),
+    }
+
+
 # ─── Hospitals ───────────────────────────────────────────────────────────────
 @app.get("/hospitals")
 @limiter.limit("30/minute")
@@ -823,6 +939,40 @@ async def get_hospitals(request: Request, current_user: dict = Depends(get_curre
             {"id": 114, "name": "Cloudnine Kids Hospital", "lat_offset": -0.01, "lng_offset": 0.007, "specialty": "Pediatrics", "phone": "+91-11-2345-6802"},
             {"id": 115, "name": "Metro Emergency Hospital", "lat_offset": 0.002, "lng_offset": 0.02, "specialty": "Emergency", "phone": "+91-11-2345-6803"},
         ]
+    }
+
+
+@app.post("/api/v1/hospitals/book-bed")
+@limiter.limit("8/minute")
+async def book_hospital_bed(request: Request, payload: BedBookingRequest, current_user: dict = Depends(get_current_user)):
+    booking_reference = f"BED-{uuid4().hex[:8].upper()}"
+    created_at = datetime.utcnow().isoformat()
+
+    bed_bookings[booking_reference] = {
+        "booking_reference": booking_reference,
+        "hospital_id": payload.hospital_id,
+        "hospital_name": payload.hospital_name,
+        "bed_type": payload.bed_type,
+        "patient_name": payload.patient_name,
+        "status": "confirmed",
+        "created_at": created_at,
+        "user_email": current_user["email"],
+    }
+
+    return {
+        "booking_reference": booking_reference,
+        "status": "confirmed",
+        "message": f"Bed booking confirmed at {payload.hospital_name}. Reference: {booking_reference}",
+    }
+
+
+@app.get("/api/v1/medicine-delivery/status")
+@limiter.limit("20/minute")
+async def medicine_delivery_status(request: Request):
+    return {
+        "status": "coming_soon",
+        "title": "Medicine Delivery",
+        "message": "Medicine delivery is coming soon. We are integrating pharmacy partners and live tracking.",
     }
 
 
