@@ -337,27 +337,21 @@ def _safe_error_detail(detail: str, internal_error: Exception = None) -> str:
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     """
-    Verifies the Supabase JWT token with a developer fallback.
+    Verifies the Supabase JWT token. Required for protected endpoints.
     """
-    # DEVELOPMENT BYPASS: Allow requests without tokens if in development mode
-    if ENVIRONMENT == "development":
-        # We still try to verify if a token is present, but don't fail hard if it's a dev request
-        if not token or token in ["null", "undefined"]:
-            return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
-
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
 
+    if not token or token in ["null", "undefined"]:
+        raise credentials_exception
+
     try:
         # Verify token with Supabase directly
         user_response = supabase_admin.auth.get_user(token)
         if not user_response or not user_response.user:
-            # Final fallback: if in dev, allow anyway. In production, fail.
-            if ENVIRONMENT == "development":
-                 return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
             raise credentials_exception
             
         return {
@@ -365,9 +359,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             "email": user_response.user.email,
             "name": user_response.user.user_metadata.get("full_name", "User")
         }
+    except HTTPException:
+        raise
     except Exception as e:
-        if ENVIRONMENT == "development":
-            return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
         print(f"🔐 Auth failed: {str(e)}")
         raise credentials_exception
 
@@ -480,12 +474,11 @@ async def geo_search(lat: float, lon: float):
 
 async def get_optional_user(token: str = Depends(oauth2_scheme_optional)):
     """
-    Optionally verifies auth token. Returns dev user if no token or in dev mode.
+    Verifies auth token. Returns user info if valid, None if no token provided.
+    No dev bypass - proper authentication required.
     """
     if not token or token in ["null", "undefined", "Bearer null", "Bearer undefined"]:
-        if ENVIRONMENT == "development":
-            return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
-        return None
+        return None  # No token = anonymous user
     try:
         user_response = supabase_admin.auth.get_user(token)
         if user_response and user_response.user:
@@ -494,11 +487,9 @@ async def get_optional_user(token: str = Depends(oauth2_scheme_optional)):
                 "email": user_response.user.email,
                 "name": user_response.user.user_metadata.get("full_name", "User")
             }
-    except Exception:
-        pass
-    if ENVIRONMENT == "development":
-        return {"email": "dev@auracare.ai", "name": "Dev User", "is_dev": True}
-    return None
+    except Exception as e:
+        print(f"Auth verification failed: {e}")
+    return None  # Invalid token = anonymous user
 
 @app.post("/api/v1/chat")
 @limiter.limit("20/minute")
