@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useRef } from 'react';
 import './AIChatbot.css';
 import { supabase } from '../supabaseClient';
 
