@@ -159,6 +159,11 @@ const AuthModal = ({ mode = 'login', onClose, onSwitchMode }) => {
                         </label>
                     </div>
 
+                    {/* Part 8: Cloudflare Turnstile */}
+                    <div style={{ marginBottom: '18px', display: 'flex', justifyContent: 'center' }}>
+                        <div className="cf-turnstile" data-sitekey="1x00000000000000000000AA"></div>
+                    </div>
+
                     {error && <div className="auth-modal-error">{error}</div>}
 
                     <button type="submit" className="auth-modal-submit" disabled={loading || !isHumanVerified}>

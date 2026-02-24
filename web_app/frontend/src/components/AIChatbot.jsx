@@ -40,25 +40,30 @@ const AIChatbot = () => {
         setInput('');
         setIsTyping(true);
 
-        // Simulated AI Response with professional clinical data
-        setTimeout(() => {
-            let botContent = "I have received your inquiry. As an AI assistant, I can confirm that our platform supports full HIPAA-compliant clinical workflows using AES-256 encryption. How can I assist you further?";
+        try {
+            const token = localStorage.getItem('supabase_access_token');
+            const response = await fetch('http://localhost:8000/api/v1/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ message: input })
+            });
 
-            const lowInput = input.toLowerCase();
+            if (!response.ok) throw new Error('Network response was not ok');
 
-            if (lowInput.includes('ambulance') || lowInput.includes('emergency') || lowInput.includes('sos')) {
-                botContent = `Emergency Services protocol is active. We currently have ${platformStats.ambulances} active units in our network including ALS (Advanced Life Support) and BLS (Basic Life Support). You can trigger an immediate dispatch via the /ambulance dashboard.`;
-            } else if (lowInput.includes('sign') || lowInput.includes('deaf') || lowInput.includes('gesture')) {
-                botContent = "AuraCare utilizes proprietary Neural Sign Recognition (NSR) technology, achieving a 98.7% accuracy rate in clinical sign translation. The system provides real-time speech synthesis with <200ms latency to ensure fluid communication between patients and providers.";
-            } else if (lowInput.includes('hospital') || lowInput.includes('bed') || lowInput.includes('facility')) {
-                botContent = `Our network currently monitors ${platformStats.hospitals} accredited medical institutions. We provide real-time telemetry on bed availability and ICU capacity. Would you like me to locate the nearest facility with available trauma care?`;
-            } else if (lowInput.includes('hipaa') || lowInput.includes('security') || lowInput.includes('private')) {
-                botContent = "AuraCare is fully HIPAA and GDPR compliant. All clinical data is encrypted at rest and in transit. Our Neural Communication Engine does not store biometric signatures, ensuring absolute patient anonymity.";
-            }
-
-            setMessages(prev => [...prev, { role: 'assistant', content: botContent }]);
+            const data = await response.json();
+            setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+        } catch (error) {
+            console.error('Chat error:', error);
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: 'I apologize, but I am currently experiencing connectivity issues with the Clinical Intelligence network. Please try again shortly or use our Emergency SOS for immediate assistance.'
+            }]);
+        } finally {
             setIsTyping(false);
-        }, 1500);
+        }
     };
 
     return (
