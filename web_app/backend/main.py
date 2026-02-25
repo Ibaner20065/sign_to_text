@@ -65,7 +65,10 @@ ALLOWED_ORIGINS = [
     for origin in os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
     if origin.strip()
 ]
+ALLOW_ORIGIN_REGEX = os.environ.get("ALLOW_ORIGIN_REGEX", None)
 print(f"📡 CORS Allowed Origins: {ALLOWED_ORIGINS}")
+if ALLOW_ORIGIN_REGEX:
+    print(f"📡 CORS Origin Regex: {ALLOW_ORIGIN_REGEX}")
 
 # Supabase Configuration
 SUPABASE_URL = _require_env("VITE_SUPABASE_URL")
@@ -1018,7 +1021,8 @@ async def custom_rate_limit_handler(request: Request, exc: RateLimitExceeded):
 # This handles OPTIONS preflight requests before they hit any route logic or decorators.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS if ALLOWED_ORIGINS else ["http://localhost:5173", "http://127.0.0.1:5173"], 
+    allow_origins=ALLOWED_ORIGINS if ALLOWED_ORIGINS else ["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origin_regex=ALLOW_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
