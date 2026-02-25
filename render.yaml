@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: auracare-backend
+    runtime: python
+    region: singapore
+    rootDir: web_app/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SECRET_KEY
+        sync: false
+      - key: SUPABASE_DB_URI
+        sync: false
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: TURNSTILE_SECRET
+        sync: false
