@@ -176,6 +176,12 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # Middleware configuration moved to the end of the file to ensure correct execution order.
 
 
+# ─── Health Check (used by uptime monitors to prevent Render spin-down) ──────
+@app.get("/health")
+async def health_check():
+    """Returns 200 OK. Ping this every 14 min to keep Render free-tier alive."""
+    return {"status": "ok"}
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # INPUT VALIDATION MODELS (OWASP A03:2021 — Injection Prevention)

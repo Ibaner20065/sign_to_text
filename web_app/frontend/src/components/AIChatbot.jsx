@@ -33,12 +33,43 @@ const AIChatbot = () => {
         }
     }, [messages, isOpen]);
 
+    // Built-in fallback responses when backend is unavailable
+    const getOfflineResponse = (message) => {
+        const msg = message.toLowerCase();
+        if (msg.includes('ambulance')) {
+            return `Our emergency response network has ambulances on standby across all districts. To request one, please visit the Ambulance Tracker page or call emergency services directly.`;
+        }
+        if (msg.includes('hospital') || msg.includes('clinic')) {
+            return `You can find nearby hospitals using our Hospital Finder page. It shows real-time bed availability, specialties, and directions.`;
+        }
+        if (msg.includes('appointment') || msg.includes('schedule') || msg.includes('book')) {
+            return `To schedule an appointment, navigate to the Health page where you can browse available doctors and book a time slot that works for you.`;
+        }
+        if (msg.includes('emergency') || msg.includes('urgent') || msg.includes('help')) {
+            return `🚨 For medical emergencies, please call your local emergency number immediately. You can also use our Emergency page to send an SOS alert and find the nearest hospital.`;
+        }
+        if (msg.includes('sign') || msg.includes('communication') || msg.includes('speech')) {
+            return `AuraCare uses Neural Sign Recognition (NSR) technology with 98.7% accuracy. Visit the Communication page to translate sign language to text/speech in real time.`;
+        }
+        if (msg.includes('document') || msg.includes('scan') || msg.includes('prescription')) {
+            return `Our Document Scanner can digitize prescriptions and medical records. Navigate to the Document Scanner page to get started.`;
+        }
+        if (msg.includes('profile') || msg.includes('account') || msg.includes('settings')) {
+            return `You can manage your profile, accessibility settings, and health records from the Profile page.`;
+        }
+        if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) {
+            return `Hello! I'm the AuraCare Clinical AI Assistant. I can help you with hospital searches, ambulance dispatch, appointments, document scanning, and accessibility features. What would you like to know?`;
+        }
+        return `AuraCare is a comprehensive healthcare accessibility platform. I can help with:\n\n• 🏥 Finding nearby hospitals\n• 🚑 Ambulance tracking & dispatch\n• 📋 Appointment scheduling\n• 🤟 Sign language communication\n• 📄 Document scanning\n• ⚙️ Accessibility settings\n\nPlease ask about any of these services!`;
+    };
+
     const handleSend = async (e) => {
         e.preventDefault();
         if (!input.trim()) return;
 
         const userMessage = { role: 'user', content: input };
         setMessages(prev => [...prev, userMessage]);
+        const currentInput = input;
         setInput('');
         setIsTyping(true);
 
@@ -52,11 +83,18 @@ const AIChatbot = () => {
             }
 
             const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+            // Use AbortController to timeout quickly if backend is down
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+
             const response = await fetch(`${apiUrl}/api/v1/chat`, {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ message: input })
+                body: JSON.stringify({ message: currentInput }),
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errData = await response.json().catch(() => ({}));
@@ -66,17 +104,20 @@ const AIChatbot = () => {
             const data = await response.json();
             setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
         } catch (error) {
-            console.error('Chat error:', error);
-            let errorMessage = 'I apologize, but I am currently experiencing connectivity issues with the Clinical Intelligence network. Please ensure the backend server is running and try again shortly.';
-
-            if (error.message.includes('401') || error.message.includes('credentials')) {
-                errorMessage = 'I was unable to verify your clinical credentials. Please try signing out and signing back in to refresh your session.';
+            // If backend is unreachable, use built-in fallback responses
+            if (error.name === 'AbortError' || error.message === 'Failed to fetch' || error.message.includes('ERR_CONNECTION_REFUSED')) {
+                const fallback = getOfflineResponse(currentInput);
+                setMessages(prev => [...prev, { role: 'assistant', content: fallback }]);
+            } else if (error.message.includes('401') || error.message.includes('credentials')) {
+                setMessages(prev => [...prev, {
+                    role: 'assistant',
+                    content: 'I was unable to verify your clinical credentials. Please try signing out and signing back in to refresh your session.'
+                }]);
+            } else {
+                console.warn('Chat: backend unavailable, using offline mode', error.message);
+                const fallback = getOfflineResponse(currentInput);
+                setMessages(prev => [...prev, { role: 'assistant', content: fallback }]);
             }
-
-            setMessages(prev => [...prev, {
-                role: 'assistant',
-                content: errorMessage
-            }]);
         } finally {
             setIsTyping(false);
         }
