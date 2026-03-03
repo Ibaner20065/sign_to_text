@@ -177,6 +177,11 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 # ─── Health Check (used by uptime monitors to prevent Render spin-down) ──────
+@app.get("/")
+async def root():
+    """Root endpoint — prevents 404 on Render health checks."""
+    return {"status": "ok", "service": "AuraCare API"}
+
 @app.get("/health")
 async def health_check():
     """Returns 200 OK. Ping this every 14 min to keep Render free-tier alive."""
