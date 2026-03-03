@@ -292,7 +292,11 @@ const Communication = () => {
     return () => {
       cleanupMediaPipe()
       if (recognitionRef.current) {
-        recognitionRef.current.stop()
+        shouldRestartRef.current = false
+        try { recognitionRef.current.stop() } catch (e) {}
+        recognitionRef.current = null
+        setIsRecording(false)
+        setSpeechStatus('')
       }
     }
   }, [mode])
@@ -324,6 +328,7 @@ const Communication = () => {
 
     const camera = new Camera(videoRef.current, {
       onFrame: async () => {
+        if (!videoRef.current || !canvasRef.current) return
         setCanvasSize()
         await hands.send({ image: videoRef.current })
       },
@@ -347,7 +352,9 @@ const Communication = () => {
   }
 
   const onResults = async (results) => {
+    if (!canvasRef.current) return
     const canvasCtx = canvasRef.current.getContext('2d')
+    if (!canvasCtx) return
     canvasCtx.save()
     canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
     canvasCtx.drawImage(results.image, 0, 0, canvasRef.current.width, canvasRef.current.height)
@@ -520,6 +527,7 @@ const Communication = () => {
     }
 
     recognition.onerror = (event) => {
+      if (event.error === 'aborted') return // Suppress aborted errors (normal during mode switch)
       console.error('Speech recognition error:', event.error)
       if (speechTimeoutRef.current) {
         clearTimeout(speechTimeoutRef.current)
