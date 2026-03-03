@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { Hands } from '@mediapipe/hands'
 import { Camera } from '@mediapipe/camera_utils'
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils'
-import { Hand, Mic, Volume2, Trash2, Clipboard, BookOpen, X, CheckCircle, Info, AlertTriangle, AlertOctagon, MicOff, Square, MessageSquare, ThumbsUp, MousePointer2, User, HandMetal } from 'lucide-react'
+import { Hand, Mic, Volume2, Trash2, Clipboard, BookOpen, X, CheckCircle, Info, AlertTriangle, AlertOctagon, MicOff, Square, MessageSquare, ThumbsUp, MousePointer2, User, HandMetal, Play, Pause, SkipForward } from 'lucide-react'
 
 const HAND_CONNECTIONS = [
   [0, 1], [1, 2], [2, 3], [3, 4],
@@ -143,6 +143,110 @@ function classifyGesture(landmarks) {
 }
 
 // ────────────────────────────────────────────
+// Speech-to-Sign: ASL Data & Mappings
+// ────────────────────────────────────────────
+
+const ASL_ALPHABET = {
+  a: { hand: '🤛', desc: 'Fist, thumb beside index finger' },
+  b: { hand: '🖐', desc: 'Flat hand, fingers together, thumb tucked in palm' },
+  c: { hand: '🫲', desc: 'Curved hand, like holding a small ball' },
+  d: { hand: '☝️', desc: 'Index up, others touch thumb in circle' },
+  e: { hand: '🤛', desc: 'Fingers curled into palm, thumb tucked under' },
+  f: { hand: '👌', desc: 'Index & thumb circle, other 3 fingers up' },
+  g: { hand: '👈', desc: 'Index & thumb point sideways, fist closed' },
+  h: { hand: '👈', desc: 'Index & middle point sideways together' },
+  i: { hand: '🤙', desc: 'Pinky up, other fingers in fist' },
+  j: { hand: '🤙', desc: 'Pinky up, trace a J motion downward' },
+  k: { hand: '✌️', desc: 'Index & middle up in V, thumb between them' },
+  l: { hand: '🤟', desc: 'L-shape: index up, thumb out, others curled' },
+  m: { hand: '🤛', desc: 'Three fingers over thumb in fist' },
+  n: { hand: '🤛', desc: 'Two fingers over thumb in fist' },
+  o: { hand: '🫰', desc: 'All fingertips touch thumb, forming O' },
+  p: { hand: '👇', desc: 'Like K but pointing downward' },
+  q: { hand: '👇', desc: 'Like G but pointing downward' },
+  r: { hand: '🤞', desc: 'Index & middle crossed, others in fist' },
+  s: { hand: '✊', desc: 'Fist with thumb over fingers' },
+  t: { hand: '🤛', desc: 'Thumb tucked between index & middle' },
+  u: { hand: '✌️', desc: 'Index & middle up together, others curled' },
+  v: { hand: '✌️', desc: 'Index & middle up spread apart (V sign)' },
+  w: { hand: '🤟', desc: 'Index, middle & ring up spread, others curled' },
+  x: { hand: '☝️', desc: 'Index finger bent like a hook' },
+  y: { hand: '🤙', desc: 'Thumb & pinky out (hang loose)' },
+  z: { hand: '☝️', desc: 'Index finger traces Z shape in air' },
+}
+
+const KNOWN_SIGNS = {
+  hello: { emoji: '👋', desc: 'Open hand near forehead, wave outward', color: '#2dd4bf' },
+  hi: { emoji: '👋', desc: 'Open hand near forehead, wave outward', color: '#2dd4bf' },
+  hey: { emoji: '👋', desc: 'Open hand near forehead, wave outward', color: '#2dd4bf' },
+  yes: { emoji: '👍', desc: 'Make fist, nod it up and down (like nodding)', color: '#22c55e' },
+  yeah: { emoji: '👍', desc: 'Make fist, nod it up and down', color: '#22c55e' },
+  no: { emoji: '✊', desc: 'Snap index+middle against thumb (like closing)', color: '#ef4444' },
+  nope: { emoji: '✊', desc: 'Snap index+middle against thumb', color: '#ef4444' },
+  you: { emoji: '👉', desc: 'Point index finger at the person', color: '#3b82f6' },
+  me: { emoji: '👈', desc: 'Point index finger at your own chest', color: '#8b5cf6' },
+  i: { emoji: '🤙', desc: 'Pinky finger up, point at yourself', color: '#8b5cf6' },
+  please: { emoji: '🤚', desc: 'Flat hand circles on chest', color: '#f59e0b' },
+  thanks: { emoji: '🤚', desc: 'Fingertips on chin, move hand outward', color: '#f59e0b' },
+  'thank you': { emoji: '🤚', desc: 'Fingertips on chin, move hand outward', color: '#f59e0b' },
+  sorry: { emoji: '✊', desc: 'Fist circles on chest', color: '#f97316' },
+  help: { emoji: '👐', desc: 'Fist on open palm, lift both up', color: '#ef4444' },
+  stop: { emoji: '🤚', desc: 'Flat hand chops into open palm', color: '#ef4444' },
+  love: { emoji: '🤟', desc: 'Thumb + index + pinky extended (ILY sign)', color: '#ec4899' },
+  good: { emoji: '👍', desc: 'Flat hand from chin, drops into open palm', color: '#22c55e' },
+  bad: { emoji: '👎', desc: 'Flat hand from chin, flip palm down', color: '#ef4444' },
+  friend: { emoji: '🤝', desc: 'Hook index fingers together, flip', color: '#3b82f6' },
+  water: { emoji: '💧', desc: 'W-hand taps chin twice', color: '#06b6d4' },
+  food: { emoji: '🍽️', desc: 'Pinched fingers tap mouth', color: '#f59e0b' },
+  eat: { emoji: '🍽️', desc: 'Pinched fingers tap mouth', color: '#f59e0b' },
+  drink: { emoji: '🥤', desc: 'C-hand tilts toward mouth', color: '#06b6d4' },
+  home: { emoji: '🏠', desc: 'Flat O on cheek, moves to jaw', color: '#8b5cf6' },
+  hospital: { emoji: '🏥', desc: 'H-hand traces cross on upper arm', color: '#ef4444' },
+  doctor: { emoji: '⚕️', desc: 'D-hand taps wrist pulse point', color: '#22c55e' },
+  pain: { emoji: '😣', desc: 'Index fingers point at each other, twist', color: '#ef4444' },
+  hurt: { emoji: '😣', desc: 'Index fingers point at each other, twist', color: '#ef4444' },
+  medicine: { emoji: '💊', desc: 'Middle finger circles on open palm', color: '#8b5cf6' },
+  emergency: { emoji: '🚨', desc: 'E-hand shakes side to side rapidly', color: '#ef4444' },
+  ambulance: { emoji: '🚑', desc: 'Cross on arm + mime driving', color: '#ef4444' },
+  name: { emoji: '✌️', desc: 'H-fingers tap on other H-fingers (crossed)', color: '#3b82f6' },
+  what: { emoji: '🤷', desc: 'Palms up, shake side to side', color: '#f59e0b' },
+  where: { emoji: '👆', desc: 'Index finger wags side to side', color: '#f59e0b' },
+  when: { emoji: '🔄', desc: 'Index circles other index, then point forward', color: '#f59e0b' },
+  how: { emoji: '🤲', desc: 'Knuckles together, roll hands out & up', color: '#f59e0b' },
+  why: { emoji: '🤔', desc: 'Touch forehead, bring hand down to Y-shape', color: '#f59e0b' },
+}
+
+/**
+ * Convert a word to its sign representation.
+ * Returns either a known sign or an array of fingerspelled letters.
+ */
+function wordToSign(word) {
+  const lower = word.toLowerCase().replace(/[^a-z]/g, '')
+  if (!lower) return null
+
+  if (KNOWN_SIGNS[lower]) {
+    return { type: 'sign', word: lower, ...KNOWN_SIGNS[lower] }
+  }
+
+  // Fingerspell the word
+  const letters = lower.split('').map(ch => ({
+    letter: ch,
+    ...(ASL_ALPHABET[ch] || { hand: '❓', desc: 'Unknown character' })
+  }))
+
+  return { type: 'fingerspell', word: lower, letters }
+}
+
+/**
+ * Convert a full transcript into sign tokens.
+ */
+function transcriptToSigns(text) {
+  if (!text || !text.trim()) return []
+  const words = text.trim().split(/\s+/)
+  return words.map(w => wordToSign(w)).filter(Boolean)
+}
+
+// ────────────────────────────────────────────
 // Communication Component
 // ────────────────────────────────────────────
 
@@ -158,6 +262,13 @@ const Communication = () => {
   const [speechStatus, setSpeechStatus] = useState('')
   const [showGuide, setShowGuide] = useState(false)
   const [noSpeechTimer, setNoSpeechTimer] = useState(null)
+  const [signTokens, setSignTokens] = useState([])
+  const [activeSignIndex, setActiveSignIndex] = useState(-1)
+  const [activeLetterIndex, setActiveLetterIndex] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [animationSpeed, setAnimationSpeed] = useState(1200) // ms per sign/letter
+  const signAnimationRef = useRef(null)
+  const signDisplayRef = useRef(null)
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const handsRef = useRef(null)
@@ -477,7 +588,91 @@ const Communication = () => {
   const clearTranscript = () => {
     setTranscript('')
     finalTranscriptRef.current = ''
+    setSignTokens([])
+    setActiveSignIndex(-1)
+    setActiveLetterIndex(0)
+    stopSignAnimation()
   }
+
+  // ── Sign Animation Logic ──
+
+  // Update sign tokens whenever transcript changes
+  useEffect(() => {
+    if (mode === 'speech' && transcript) {
+      const tokens = transcriptToSigns(transcript)
+      setSignTokens(tokens)
+    }
+  }, [transcript, mode])
+
+  const stopSignAnimation = useCallback(() => {
+    setIsAnimating(false)
+    if (signAnimationRef.current) {
+      clearInterval(signAnimationRef.current)
+      signAnimationRef.current = null
+    }
+  }, [])
+
+  const playSignAnimation = useCallback(() => {
+    if (signTokens.length === 0) return
+
+    stopSignAnimation()
+    setIsAnimating(true)
+    setActiveSignIndex(0)
+    setActiveLetterIndex(0)
+
+    let wordIdx = 0
+    let letterIdx = 0
+
+    signAnimationRef.current = setInterval(() => {
+      const token = signTokens[wordIdx]
+      if (!token) {
+        // Reached the end
+        stopSignAnimation()
+        setActiveSignIndex(signTokens.length - 1)
+        return
+      }
+
+      if (token.type === 'fingerspell') {
+        // Advance through letters
+        if (letterIdx < token.letters.length - 1) {
+          letterIdx++
+          setActiveLetterIndex(letterIdx)
+        } else {
+          // Move to next word
+          wordIdx++
+          letterIdx = 0
+          setActiveSignIndex(wordIdx)
+          setActiveLetterIndex(0)
+        }
+      } else {
+        // Known sign — hold for a beat then advance
+        wordIdx++
+        letterIdx = 0
+        setActiveSignIndex(wordIdx)
+        setActiveLetterIndex(0)
+      }
+
+      // Scroll active sign into view
+      if (signDisplayRef.current) {
+        const activeEl = signDisplayRef.current.querySelector('.sign-card.active')
+        if (activeEl) {
+          activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+        }
+      }
+    }, animationSpeed)
+  }, [signTokens, animationSpeed, stopSignAnimation])
+
+  const skipToNextSign = () => {
+    if (activeSignIndex < signTokens.length - 1) {
+      setActiveSignIndex(prev => prev + 1)
+      setActiveLetterIndex(0)
+    }
+  }
+
+  // Cleanup animation on unmount or mode change
+  useEffect(() => {
+    return () => stopSignAnimation()
+  }, [mode, stopSignAnimation])
 
   // ── Gesture guide data ──
   const gestureGuide = [
@@ -509,7 +704,7 @@ const Communication = () => {
           onClick={() => setMode('speech')}
           id="mode-speech"
         >
-          <Mic size={18} /> Speech to Text
+          <Mic size={18} /> Speech to Sign
         </button>
       </div>
 
@@ -597,9 +792,9 @@ const Communication = () => {
       ) : (
         <div className="speech-mode">
           <div className="card">
-            <h3>Live Captioning</h3>
+            <h3><Hand size={22} style={{ verticalAlign: 'middle', marginRight: '8px' }} />Speech to Sign Language</h3>
             <p className="description">
-              Speak into your microphone. Your words will be transcribed in real-time so a deaf user can read along.
+              Speak into your microphone. Your words will be converted into sign language visuals in real-time.
             </p>
 
             {/* Status message */}
@@ -620,11 +815,103 @@ const Communication = () => {
               </div>
             )}
 
-            <div className="transcript-container" id="transcript-container">
-              <div className={`transcript-text ${!transcript ? 'empty' : ''}`}>
-                {transcript || <><Mic size={24} style={{ opacity: 0.5, marginBottom: '12px' }} /><br />Press "Start Recording" to begin live captioning...</>}
-              </div>
+            {/* Transcript (smaller, secondary) */}
+            <div className="transcript-mini" id="transcript-mini">
+              <span className="transcript-label">Transcript:</span>
+              <span className={`transcript-inline ${!transcript ? 'empty' : ''}`}>
+                {transcript || 'Waiting for speech...'}
+              </span>
             </div>
+
+            {/* Sign Language Display */}
+            {signTokens.length > 0 && (
+              <div className="sign-display-section">
+                <div className="sign-display-header">
+                  <h4>Sign Language Translation</h4>
+                  <div className="sign-controls-inline">
+                    {!isAnimating ? (
+                      <button className="sign-ctrl-btn" onClick={playSignAnimation} title="Play animation">
+                        <Play size={16} />
+                      </button>
+                    ) : (
+                      <button className="sign-ctrl-btn" onClick={stopSignAnimation} title="Pause animation">
+                        <Pause size={16} />
+                      </button>
+                    )}
+                    <button className="sign-ctrl-btn" onClick={skipToNextSign} title="Next sign" disabled={activeSignIndex >= signTokens.length - 1}>
+                      <SkipForward size={16} />
+                    </button>
+                    <div className="speed-control">
+                      <label>Speed:</label>
+                      <input
+                        type="range"
+                        min="400"
+                        max="2000"
+                        step="200"
+                        value={2400 - animationSpeed}
+                        onChange={(e) => setAnimationSpeed(2400 - Number(e.target.value))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Active Sign - Large Display */}
+                {activeSignIndex >= 0 && activeSignIndex < signTokens.length && (
+                  <div className="active-sign-display">
+                    {signTokens[activeSignIndex].type === 'sign' ? (
+                      <div className="active-sign-known" style={{ borderColor: signTokens[activeSignIndex].color }}>
+                        <span className="active-sign-emoji">{signTokens[activeSignIndex].emoji}</span>
+                        <span className="active-sign-word">{signTokens[activeSignIndex].word}</span>
+                        <span className="active-sign-desc">{signTokens[activeSignIndex].desc}</span>
+                        <span className="sign-type-badge known">Known Sign</span>
+                      </div>
+                    ) : (
+                      <div className="active-sign-fingerspell">
+                        <div className="fingerspell-word-label">Fingerspelling: <strong>{signTokens[activeSignIndex].word}</strong></div>
+                        <div className="fingerspell-letters">
+                          {signTokens[activeSignIndex].letters.map((l, li) => (
+                            <div key={li} className={`fingerspell-letter ${li === activeLetterIndex ? 'active' : li < activeLetterIndex ? 'done' : ''}`}>
+                              <span className="fs-hand">{l.hand}</span>
+                              <span className="fs-char">{l.letter.toUpperCase()}</span>
+                            </div>
+                          ))}
+                        </div>
+                        {signTokens[activeSignIndex].letters[activeLetterIndex] && (
+                          <div className="fingerspell-current-desc">
+                            <strong>{signTokens[activeSignIndex].letters[activeLetterIndex].letter.toUpperCase()}</strong>: {signTokens[activeSignIndex].letters[activeLetterIndex].desc}
+                          </div>
+                        )}
+                        <span className="sign-type-badge fingerspell">Fingerspelling</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Sign Timeline - All words */}
+                <div className="sign-timeline" ref={signDisplayRef}>
+                  {signTokens.map((token, idx) => (
+                    <div
+                      key={idx}
+                      className={`sign-card ${idx === activeSignIndex ? 'active' : ''} ${idx < activeSignIndex ? 'done' : ''} ${token.type}`}
+                      onClick={() => { setActiveSignIndex(idx); setActiveLetterIndex(0); }}
+                    >
+                      {token.type === 'sign' ? (
+                        <>
+                          <span className="sign-card-emoji">{token.emoji}</span>
+                          <span className="sign-card-word">{token.word}</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="sign-card-emoji">🤟</span>
+                          <span className="sign-card-word">{token.word}</span>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="controls">
               {!isRecording ? (
                 <button className="button button-primary" onClick={startSpeechRecognition} id="btn-start-recording">

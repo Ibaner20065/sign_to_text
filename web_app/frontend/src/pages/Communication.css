@@ -388,4 +388,389 @@
   .sentence-text {
     font-size: 1.1rem;
   }
+
+  .sign-timeline {
+    gap: var(--space-2);
+  }
+
+  .sign-card {
+    min-width: 60px;
+    padding: var(--space-2);
+  }
+
+  .active-sign-display {
+    padding: var(--space-4);
+  }
+
+  .fingerspell-letters {
+    gap: var(--space-2);
+  }
+
+  .fingerspell-letter {
+    width: 42px;
+    height: 52px;
+  }
+
+  .sign-display-header {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .sign-controls-inline {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SPEECH TO SIGN — Sign Language Display
+   ═══════════════════════════════════════════ */
+
+/* Mini transcript bar */
+.transcript-mini {
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-size: 0.85rem;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.transcript-label {
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-right: var(--space-2);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+
+.transcript-inline {
+  color: var(--text-secondary);
+}
+
+.transcript-inline.empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Sign Display Section */
+.sign-display-section {
+  margin-top: var(--space-4);
+  animation: fadeIn 0.4s ease;
+}
+
+.sign-display-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.sign-display-header h4 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 0;
+}
+
+.sign-controls-inline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sign-ctrl-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.sign-ctrl-btn:hover:not(:disabled) {
+  background: rgba(45, 212, 191, 0.15);
+  color: #2dd4bf;
+  border-color: rgba(45, 212, 191, 0.3);
+}
+
+.sign-ctrl-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.speed-control input[type="range"] {
+  width: 80px;
+  height: 4px;
+  accent-color: #2dd4bf;
+}
+
+/* Active Sign - Large Display */
+.active-sign-display {
+  padding: var(--space-6);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+  text-align: center;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.active-sign-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.active-sign-known {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  border-left: 4px solid #2dd4bf;
+  padding-left: var(--space-4);
+  position: relative;
+  z-index: 1;
+}
+
+.active-sign-emoji {
+  font-size: 4rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  animation: signBounce 0.5s ease;
+}
+
+@keyframes signBounce {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.active-sign-word {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.active-sign-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  max-width: 350px;
+  line-height: 1.4;
+}
+
+.sign-type-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sign-type-badge.known {
+  background: rgba(45, 212, 191, 0.15);
+  color: #2dd4bf;
+}
+
+.sign-type-badge.fingerspell {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+}
+
+/* Fingerspell Display */
+.active-sign-fingerspell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.fingerspell-word-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.fingerspell-word-label strong {
+  color: #a78bfa;
+  font-size: 1rem;
+}
+
+.fingerspell-letters {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: var(--space-2) 0;
+}
+
+.fingerspell-letter {
+  width: 52px;
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.fingerspell-letter.active {
+  border-color: #a78bfa;
+  background: rgba(139, 92, 246, 0.15);
+  transform: scale(1.15);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.fingerspell-letter.done {
+  border-color: rgba(45, 212, 191, 0.3);
+  background: rgba(45, 212, 191, 0.08);
+}
+
+.fs-hand {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.fs-char {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.fingerspell-letter.active .fs-char {
+  color: #a78bfa;
+}
+
+.fingerspell-letter.done .fs-char {
+  color: #2dd4bf;
+}
+
+.fingerspell-current-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding: var(--space-2) var(--space-4);
+  background: rgba(139, 92, 246, 0.08);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  max-width: 400px;
+}
+
+.fingerspell-current-desc strong {
+  color: #a78bfa;
+}
+
+/* Sign Timeline */
+.sign-timeline {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding: var(--space-3) var(--space-1);
+  margin-bottom: var(--space-4);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-subtle) transparent;
+  scroll-behavior: smooth;
+}
+
+.sign-timeline::-webkit-scrollbar {
+  height: 4px;
+}
+
+.sign-timeline::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sign-timeline::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+
+.sign-card {
+  min-width: 72px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sign-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--text-muted);
+}
+
+.sign-card.active {
+  border-color: #2dd4bf;
+  background: rgba(45, 212, 191, 0.1);
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.2);
+  transform: translateY(-2px);
+}
+
+.sign-card.done {
+  opacity: 0.5;
+}
+
+.sign-card.active.done {
+  opacity: 1;
+}
+
+.sign-card-emoji {
+  font-size: 1.3rem;
+}
+
+.sign-card-word {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: lowercase;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
