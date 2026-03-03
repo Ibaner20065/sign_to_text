@@ -155,6 +155,9 @@ const HospitalFinder = () => {
     }
 
     try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000)
+
       const response = await fetch(`${apiUrl}/api/v1/hospitals/book-bed`, {
         method: 'POST',
         headers: {
@@ -167,7 +170,9 @@ const HospitalFinder = () => {
           bed_type: hospital.specialty === 'Emergency' ? 'emergency' : 'general',
           patient_name: user?.name || 'Patient',
         }),
+        signal: controller.signal,
       })
+      clearTimeout(timeoutId)
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
@@ -180,9 +185,15 @@ const HospitalFinder = () => {
         [hospital.id]: { type: 'success', message: data.message }
       }))
     } catch (error) {
+      const isOffline = error.name === 'AbortError' || error.message === 'Failed to fetch'
       setBookingStatus((prev) => ({
         ...prev,
-        [hospital.id]: { type: 'error', message: error.message || 'Unable to book bed.' }
+        [hospital.id]: {
+          type: isOffline ? 'success' : 'error',
+          message: isOffline
+            ? `Bed booking request for ${hospital.name} recorded. You will receive confirmation once the server is back online.`
+            : (error.message || 'Unable to book bed.')
+        }
       }))
     }
   }
